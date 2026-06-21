@@ -32,12 +32,13 @@ export default function Nav() {
   }, [open]);
 
   return (
-    <header
-      className={`sticky top-0 z-[100] border-b border-gray-200 bg-white/92 backdrop-blur-md transition-shadow ${
-        scrolled ? "shadow-sm" : ""
-      }`}
-      role="banner"
-    >
+    <>
+      <header
+        className={`sticky top-0 z-[100] border-b border-gray-200 bg-white/92 backdrop-blur-md transition-shadow ${
+          scrolled ? "shadow-sm" : ""
+        }`}
+        role="banner"
+      >
       <nav
         className="mx-auto flex h-16 max-w-[1120px] items-center justify-between px-6"
         aria-label="Main navigation"
@@ -98,12 +99,16 @@ export default function Nav() {
             }`}
           />
         </button>
-      </nav>
+        </nav>
+      </header>
 
-      {/* Mobile slide-in menu */}
+      {/* Mobile slide-in menu — rendered as a sibling of <header> (not a
+          child) so its `position: fixed` resolves against the viewport. The
+          header's `backdrop-blur` would otherwise become the containing block
+          and collapse this panel to a thin strip. */}
       <div
         id="mobile-nav"
-        className={`fixed inset-x-0 bottom-0 top-16 z-[99] border-t border-gray-200 bg-white px-6 py-4 transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-x-0 bottom-0 top-16 z-[99] overflow-y-auto border-t border-gray-200 bg-white px-6 py-4 shadow-xl transition-transform duration-300 ease-in-out md:hidden ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -130,6 +135,6 @@ export default function Nav() {
           </li>
         </ul>
       </div>
-    </header>
+    </>
   );
 }
