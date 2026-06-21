@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4D Supper Club — Chef-Crafted Meals Delivered in Riverview</title>
+<meta name="description" content="Chef Rich Dino delivers restaurant-quality meals to your door in Riverview. Weekly supper club, catering, and special events.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green-600:#388E3C;--green-500:#4CAF50;--green-400:#66BB6A;--green-50:#E8F5E9;
+  --gray-900:#111827;--gray-800:#1F2937;--gray-700:#374151;--gray-600:#4B5563;
+  --gray-500:#6B7280;--gray-400:#9CA3AF;--gray-300:#D1D5DB;--gray-200:#E5E7EB;
+  --gray-100:#F3F4F6;--gray-50:#F9FAFB;--white:#FFFFFF;
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+  --max-w:1120px;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--gray-800);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+
+/* ── Nav ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200);transition:box-shadow .2s}
+.nav.scrolled{box-shadow:var(--shadow)}
+.nav-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px}
+.nav-logo{font-weight:800;font-size:1.2rem;color:var(--green-600);letter-spacing:-.02em}
+.nav-logo span{color:var(--gray-900)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--gray-600);transition:color .15s}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--gray-900)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:.875rem;transition:all .15s;outline:none}
+.btn:focus-visible{box-shadow:0 0 0 3px rgba(76,175,80,.4)}
+.btn-primary{background:var(--green-500);color:var(--white)}
+.btn-primary:hover{background:var(--green-600);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-outline{border:1.5px solid var(--green-500);color:var(--green-600)}
+.btn-outline:hover{background:var(--green-50)}
+.btn-lg{padding:14px 32px;font-size:1rem;border-radius:var(--radius)}
+.hamburger{display:none;flex-direction:column;gap:5px;width:24px;padding:4px 0}
+.hamburger span{display:block;height:2px;background:var(--gray-700);border-radius:2px;transition:all .25s}
+
+/* Mobile nav */
+@media(max-width:768px){
+  .nav-links{position:fixed;inset:0;top:64px;background:var(--white);flex-direction:column;gap:0;padding:16px 24px;transform:translateX(100%);transition:transform .3s ease;z-index:99;border-top:1px solid var(--gray-200)}
+  .nav-links.open{transform:translateX(0)}
+  .nav-links a{font-size:1.1rem;padding:14px 0;border-bottom:1px solid var(--gray-100);width:100%}
+  .nav-links .btn{margin-top:8px;width:100%;text-align:center}
+  .hamburger{display:flex}
+  .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+  .hamburger.active span:nth-child(2){opacity:0}
+  .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+}
+
+/* ── Hero ── */
+.hero{padding:80px 24px 96px;text-align:center;background:linear-gradient(180deg,var(--green-50) 0%,var(--white) 100%)}
+.hero-inner{max-width:720px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:999px;padding:6px 16px;font-size:.8rem;font-weight:600;color:var(--green-600);margin-bottom:24px;box-shadow:var(--shadow-sm)}
+.hero-badge svg{flex-shrink:0}
+.hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:var(--gray-900);margin-bottom:20px}
+.hero h1 em{font-style:normal;color:var(--green-500)}
+.hero p{font-size:clamp(1.05rem,2vw,1.2rem);color:var(--gray-600);max-width:540px;margin:0 auto 36px;line-height:1.7}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-trust{margin-top:48px;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;color:var(--gray-500);font-size:.85rem}
+.hero-trust span{display:flex;align-items:center;gap:6px}
+.hero-trust svg{color:var(--green-500)}
+
+/* ── Section ── */
+.section{padding:80px 24px}
+.section-alt{background:var(--gray-50)}
+.section-header{text-align:center;max-width:600px;margin:0 auto 56px}
+.section-label{font-size:.8rem;font-weight:700;color:var(--green-500);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.section-header h2{font-size:clamp(1.6rem,3.5vw,2.25rem);font-weight:800;color:var(--gray-900);letter-spacing:-.02em;line-height:1.2;margin-bottom:16px}
+.section-header p{color:var(--gray-500);font-size:1.05rem;line-height:1.7}
+.container{max-width:var(--max-w);margin:0 auto}
+
+/* ── How it Works ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.step{text-align:center;padding:32px 24px}
+.step-icon{width:64px;height:64px;border-radius:var(--radius);background:var(--green-50);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.step-icon svg{color:var(--green-500)}
+.step-num{font-size:.75rem;font-weight:700;color:var(--green-500);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.step h3{font-size:1.15rem;font-weight:700;color:var(--gray-900);margin-bottom:8px}
+.step p{color:var(--gray-500);font-size:.925rem;line-height:1.6}
+@media(max-width:768px){.steps{grid-template-columns:1fr;gap:16px}}
+
+/* ── Programs / Menu ── */
+.programs{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.program-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;transition:all .2s}
+.program-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);border-color:var(--gray-300)}
+.program-card img{width:100%;height:200px;object-fit:cover;background:var(--gray-100)}
+.program-body{padding:24px}
+.program-tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-600);background:var(--green-50);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+.program-body h3{font-size:1.15rem;font-weight:700;color:var(--gray-900);margin-bottom:8px}
+.program-body p{color:var(--gray-500);font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.program-items{display:flex;flex-direction:column;gap:6px}
+.program-items li{font-size:.85rem;color:var(--gray-600);display:flex;align-items:center;gap:8px}
+.program-items li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green-400);flex-shrink:0}
+@media(max-width:768px){.programs{grid-template-columns:1fr}}
+
+/* ── Testimonials ── */
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testimonial{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px;position:relative}
+.testimonial::before{content:'\201C';position:absolute;top:16px;left:24px;font-size:3rem;color:var(--green-400);line-height:1;font-family:Georgia,serif}
+.testimonial blockquote{font-size:.95rem;color:var(--gray-700);line-height:1.7;margin-bottom:20px;padding-top:24px}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{width:40px;height:40px;border-radius:50%;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--green-600)}
+.testimonial-name{font-weight:600;font-size:.875rem;color:var(--gray-900)}
+.testimonial-loc{font-size:.8rem;color:var(--gray-500)}
+@media(max-width:768px){.testimonials{grid-template-columns:1fr}}
+
+/* ── About ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.about-img{border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:4/5;background:var(--gray-100)}
+.about-img img{width:100%;height:100%;object-fit:cover}
+.about-content h2{font-size:clamp(1.6rem,3.5vw,2.25rem);font-weight:800;color:var(--gray-900);letter-spacing:-.02em;line-height:1.2;margin-bottom:20px}
+.about-content p{color:var(--gray-600);font-size:1rem;line-height:1.8;margin-bottom:16px}
+.about-stats{display:flex;gap:32px;margin-top:28px}
+.stat{text-align:center}
+.stat-num{font-size:1.75rem;font-weight:800;color:var(--green-500)}
+.stat-label{font-size:.8rem;color:var(--gray-500);font-weight:500}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:32px}.about-img{max-height:360px}}
+
+/* ── FAQ ── */
+.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.faq-item{border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;transition:border-color .15s}
+.faq-item.active{border-color:var(--green-400)}
+.faq-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 20px;font-size:1rem;font-weight:600;color:var(--gray-900);text-align:left;background:var(--white);transition:background .15s}
+.faq-btn:hover{background:var(--gray-50)}
+.faq-btn:focus-visible{outline:2px solid var(--green-500);outline-offset:-2px;border-radius:var(--radius)}
+.faq-btn svg{flex-shrink:0;transition:transform .25s;color:var(--gray-400)}
+.faq-item.active .faq-btn svg{transform:rotate(180deg);color:var(--green-500)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-answer-inner{padding:0 20px 18px;color:var(--gray-600);font-size:.925rem;line-height:1.7}
+
+/* ── Final CTA ── */
+.cta-section{padding:96px 24px;text-align:center;background:var(--gray-900);color:var(--white)}
+.cta-section h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:16px}
+.cta-section p{color:var(--gray-400);font-size:1.1rem;max-width:500px;margin:0 auto 36px;line-height:1.7}
+.cta-section .btn-primary{background:var(--green-500);padding:16px 40px;font-size:1.05rem;border-radius:var(--radius)}
+.cta-section .btn-primary:hover{background:var(--green-400)}
+
+/* ── Footer ── */
+.footer{background:var(--gray-900);border-top:1px solid rgba(255,255,255,.08);padding:48px 24px 32px;color:var(--gray-400)}
+.footer-inner{max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.footer-brand{max-width:280px}
+.footer-brand .nav-logo{font-size:1.1rem;margin-bottom:12px;display:block}
+.footer-brand .nav-logo span{color:var(--white)}
+.footer-brand p{font-size:.85rem;line-height:1.7;color:var(--gray-500)}
+.footer-col h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-300);margin-bottom:16px}
+.footer-col a{display:block;font-size:.875rem;color:var(--gray-500);padding:4px 0;transition:color .15s}
+.footer-col a:hover,.footer-col a:focus-visible{color:var(--white)}
+.footer-bottom{max-width:var(--max-w);margin:32px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.8rem;color:var(--gray-500)}
+.footer-socials{display:flex;gap:16px}
+.footer-socials a{color:var(--gray-500);transition:color .15s}
+.footer-socials a:hover{color:var(--white)}
+@media(max-width:768px){
+  .footer-inner{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-brand{grid-column:span 2}
+  .footer-bottom{flex-direction:column;text-align:center}
+}
+@media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
+
+/* ── Utils ── */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<header class="nav" role="banner">
+  <nav class="nav-inner" aria-label="Main navigation">
+    <a href="#" class="nav-logo" aria-label="4D Supper Club home">4D <span>Supper Club</span></a>
+    <ul class="nav-links" id="navLinks" role="list">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#order" class="btn btn-primary">Order Now</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Serving 200+ families in Riverview
+    </div>
+    <h1>Restaurant-Quality Dinners, <em>Delivered to Your Door</em></h1>
+    <p>Chef Rich Dino prepares seasonal, scratch-made meals so you can skip the cooking and still gather around a great dinner.</p>
+    <div class="hero-ctas">
+      <a href="#order" class="btn btn-primary btn-lg">Start Your Subscription</a>
+      <a href="#menu" class="btn btn-outline btn-lg">See This Week's Menu</a>
+    </div>
+    <div class="hero-trust">
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+        No commitments
+      </span>
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+        Skip or cancel anytime
+      </span>
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+        Free Riverview delivery
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="section section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">How It Works</div>
+      <h2>Dinner on Your Table in Three Simple Steps</h2>
+      <p>We handle the shopping, the prep, and the delivery. All you do is eat.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="step-num">Step 1</div>
+        <h3>Pick Your Plan</h3>
+        <p>Choose weekly meals for 2 or 4, select any dietary preferences, and set your delivery day.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        </div>
+        <div class="step-num">Step 2</div>
+        <h3>We Cook &amp; Deliver</h3>
+        <p>Chef Rich sources fresh, local ingredients and prepares every dish from scratch in our kitchen.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <div class="step-num">Step 3</div>
+        <h3>Heat, Serve, Enjoy</h3>
+        <p>Your meals arrive portioned and ready. Just heat, plate, and sit down to a chef-made dinner.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROGRAMS / MENU ─── -->
+<section class="section" id="menu">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Our Programs</div>
+      <h2>Something for Every Night &amp; Every Occasion</h2>
+      <p>From weeknight dinners to weekend celebrations, we've got your table covered.</p>
+    </div>
+    <div class="programs">
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=400&fit=crop&q=80" alt="A beautifully plated family dinner with roasted vegetables and protein" loading="lazy">
+        <div class="program-body">
+          <span class="program-tag">Most Popular</span>
+          <h3>Weekly Supper Club</h3>
+          <p>Two or three chef-prepared entrees delivered each week. Enough to feed the whole family with zero effort.</p>
+          <ul class="program-items">
+            <li>Pan-Seared Salmon with Dill Cream</li>
+            <li>Braised Short Ribs over Polenta</li>
+            <li>Roasted Chicken Provencal</li>
+            <li>Seasonal Veggie Risotto</li>
+          </ul>
+        </div>
+      </div>
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=600&h=400&fit=crop&q=80" alt="Catering spread with multiple dishes for a group gathering" loading="lazy">
+        <div class="program-body">
+          <span class="program-tag">Groups &amp; Parties</span>
+          <h3>Private Catering</h3>
+          <p>Custom menus for 10 to 100 guests. We work with you to design the perfect spread for your event.</p>
+          <ul class="program-items">
+            <li>Birthdays &amp; Anniversaries</li>
+            <li>Corporate Lunches</li>
+            <li>Holiday Gatherings</li>
+            <li>Custom Dietary Menus</li>
+          </ul>
+        </div>
+      </div>
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop&q=80" alt="Elegant special event dinner table setting with candlelight" loading="lazy">
+        <div class="program-body">
+          <span class="program-tag">Exclusive</span>
+          <h3>Special Events</h3>
+          <p>Multi-course tasting dinners, seasonal pop-ups, and themed culinary experiences — right in your home.</p>
+          <ul class="program-items">
+            <li>5-Course Tasting Menus</li>
+            <li>Wine Pairing Dinners</li>
+            <li>Seasonal Pop-Up Nights</li>
+            <li>Cooking Demonstrations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section class="section section-alt" id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">What Our Members Say</div>
+      <h2>Riverview Families Love Supper Club</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <blockquote>We both work full-time and have two kids under six. 4D Supper Club gave us back our evenings. The food is incredible — my kids actually ask for seconds on vegetables now.</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JM</div>
+          <div>
+            <div class="testimonial-name">Jessica M.</div>
+            <div class="testimonial-loc">Riverview, FL</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <blockquote>I hired Chef Rich for my mom's 70th birthday dinner and every single guest asked for his number. The braised short ribs were out of this world. Truly a five-star experience at home.</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">DL</div>
+          <div>
+            <div class="testimonial-name">David L.</div>
+            <div class="testimonial-loc">Riverview, FL</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <blockquote>I've tried every meal kit service and nothing compares. This isn't assemble-it-yourself — it's real food made by a real chef. Canceling my other subscriptions was the easiest decision ever.</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">KT</div>
+          <div>
+            <div class="testimonial-name">Karen T.</div>
+            <div class="testimonial-loc">Riverview, FL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&h=750&fit=crop&q=80" alt="Chef Rich Dino in the kitchen preparing a dish" loading="lazy">
+      </div>
+      <div class="about-content">
+        <div class="section-label">Meet Your Chef</div>
+        <h2>Chef Rich Dino</h2>
+        <p>With over 15 years in professional kitchens — from upscale Italian restaurants in New York to farm-to-table concepts in Florida — Rich brings big-city culinary chops to Riverview's dinner tables.</p>
+        <p>After years of cooking for strangers, Rich wanted to cook for neighbors. 4D Supper Club was born out of a simple belief: every family deserves to sit down to a great meal without the stress of making it happen.</p>
+        <p>Every dish is made from scratch using locally sourced ingredients whenever possible. No shortcuts, no compromises, no frozen anything.</p>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-num">15+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">200+</div>
+            <div class="stat-label">Families Served</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Rotating Dishes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">FAQ</div>
+      <h2>Questions? We've Got Answers</h2>
+    </div>
+    <div class="faq-list" role="list">
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          How does the weekly subscription work?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Choose a plan for 2 or 4 people, pick your delivery day, and we'll bring freshly prepared meals to your door each week. The menu rotates weekly so you'll always have something new. You can skip a week or cancel anytime — no contracts.</div>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          What area do you deliver to?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">We currently deliver throughout Riverview and the surrounding areas in Hillsborough County. Delivery is free for all subscribers. If you're outside our zone, reach out — we're expanding and may be able to accommodate you.</div>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          Can you accommodate allergies and dietary restrictions?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Absolutely. We accommodate gluten-free, dairy-free, nut-free, vegetarian, and other dietary needs. Just let us know when you sign up and we'll make sure every meal works for your household. For severe allergies, we'll consult with you directly.</div>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          How do I heat the meals?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Every meal comes with simple heating instructions. Most take 10-15 minutes in the oven or a few minutes in the microwave. They're designed to taste just as good reheated — no complicated steps, no special equipment.</div>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          How much does it cost?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Plans start at $12-15 per serving depending on the number of people and meals per week. That's less than takeout for restaurant-quality food made from fresh, high-quality ingredients. Catering and special events are quoted based on guest count and menu.</div>
+        </div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <button class="faq-btn" aria-expanded="false">
+          What if I need to skip a week?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">No problem at all. Just let us know by Wednesday for the following week's delivery and we'll pause your order. No fees, no questions. Life happens — we get it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FINAL CTA ─── -->
+<section class="cta-section" id="order">
+  <div class="container">
+    <h2>Ready to Reclaim Your Evenings?</h2>
+    <p>Join 200+ Riverview families who traded cooking stress for chef-made dinners. Your first week ships free.</p>
+    <a href="mailto:chef@4dsupperclub.com?subject=I%27d%20like%20to%20join%204D%20Supper%20Club" class="btn btn-primary btn-lg">Get Started Today</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">4D <span>Supper Club</span></a>
+      <p>Chef-crafted meals delivered to your door in Riverview, FL. Made from scratch, served with love.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <a href="#menu">Weekly Supper Club</a>
+      <a href="#menu">Private Catering</a>
+      <a href="#menu">Special Events</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:chef@4dsupperclub.com">chef@4dsupperclub.com</a>
+      <a href="tel:+18135551234">(813) 555-1234</a>
+      <a href="#">Riverview, FL</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 4D Supper Club. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#" aria-label="Facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      </a>
+      <a href="#" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="#" aria-label="TikTok">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Mobile nav toggle ──
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  hamburger.classList.toggle('active');
+  hamburger.setAttribute('aria-expanded', open);
+});
+// Close nav on link click
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+  });
+});
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.focus();
+  }
+});
+
+// ── Sticky nav shadow ──
+const nav = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
+
+// ── FAQ accordion ──
+document.querySelectorAll('.faq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const answer = item.querySelector('.faq-answer');
+    const isOpen = item.classList.contains('active');
+
+    // Close all
+    document.querySelectorAll('.faq-item.active').forEach(openItem => {
+      openItem.classList.remove('active');
+      openItem.querySelector('.faq-btn').setAttribute('aria-expanded', 'false');
+      openItem.querySelector('.faq-answer').style.maxHeight = null;
+    });
+
+    // Open clicked if it was closed
+    if (!isOpen) {
+      item.classList.add('active');
+      btn.setAttribute('aria-expanded', 'true');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+
+  // Keyboard: Enter & Space
+  btn.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+});
+</script>
+</body>
+</html>
