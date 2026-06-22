@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex">
+  <title>4D Supper Club — Cards Carousel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #16a34a;
+      --green-dark: #128a3f;
+      --gold: #C5A55A;
+      --ink: #111827;
+      --cream: #faf8f5;
+      --muted: #6b7280;
+      --gray-400: #9ca3af;
+      --line: #ece7df;
+      --card: #ffffff;
+
+      /* one shared horizontal rhythm for the whole page */
+      --pad: 24px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #e9e4dc; color: var(--ink); -webkit-font-smoothing: antialiased;
+      display: flex; justify-content: center;
+    }
+    .phone {
+      width: 402px; max-width: 100%; height: 100vh; max-height: 100vh;
+      background: var(--cream); position: relative; overflow: hidden;
+    }
+
+    /* ── Sliding views ─────────────────────────────── */
+    .view {
+      position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: var(--cream);
+      transition: transform 0.42s cubic-bezier(.4,0,.2,1), opacity 0.42s ease;
+    }
+    #home { transform: translateX(0); opacity: 1; }
+    #home.out { transform: translateX(-22%); opacity: 0.35; }
+    #detail {
+      transform: translateX(100%); opacity: 1; z-index: 10;
+      box-shadow: -8px 0 30px rgba(17,24,39,0.14);
+    }
+    #detail.in { transform: translateX(0); }
+
+    /* ── 1. VIDEO HERO ─────────────────────────────── */
+    .hero {
+      position: relative; height: 50vh; min-height: 360px;
+      background: var(--ink); overflow: hidden;
+    }
+    .hero-media {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      animation: heroZoom 6s ease-out both;
+    }
+    @keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+    .hero-scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(17,24,39,0.92) 0%,
+        rgba(17,24,39,0.55) 26%,
+        rgba(17,24,39,0.05) 52%,
+        rgba(17,24,39,0.10) 100%);
+    }
+    .hero-text {
+      position: absolute; left: var(--pad); right: var(--pad); bottom: 30px;
+      color: #fff;
+      opacity: 0; transform: translateY(14px);
+    }
+    .hero-text.show { animation: heroIn 0.8s ease both; }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text h1 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 31px;
+      line-height: 1.12; letter-spacing: -0.6px;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.35);
+    }
+    .hero-text h1 .gold { color: var(--gold); }
+    .hero-sub {
+      margin-top: 12px; font-size: 13.5px; font-weight: 500;
+      color: var(--gray-400); letter-spacing: 0.01em;
+      opacity: 0;
+    }
+    .hero-sub.show { animation: heroIn 0.8s ease 0.32s both; }
+    .hero-brand {
+      position: absolute; top: 18px; left: var(--pad); z-index: 3;
+      display: flex; align-items: center; gap: 9px;
+      opacity: 0; animation: heroIn 0.7s ease 0.15s both;
+    }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 8px; background: var(--green);
+      display: grid; place-items: center; color: #fff;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 14px; letter-spacing: -0.5px;
+    }
+    .logo-text { font-family: 'DM Sans'; font-weight: 700; font-size: 16px; letter-spacing: -0.2px; color: #fff; }
+    .logo-text .gold { color: var(--gold); }
+
+    /* ── 2. SERVICE CARDS — FULL-FOCUS SWIPE CAROUSEL ── */
+    .carousel-wrap { padding-top: 24px; }
+    .carousel {
+      display: flex; gap: 0;
+      padding: 0 var(--pad); overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .carousel::-webkit-scrollbar { display: none; }
+    .big-card {
+      flex: 0 0 100%; scroll-snap-align: center;
+      /* each card holds the same inner width as page content */
+      padding-right: 0;
+    }
+    .big-card-inner {
+      background: var(--card); border-radius: 22px; border: 1px solid var(--line);
+      overflow: hidden; box-shadow: 0 10px 30px rgba(17,24,39,0.10);
+      cursor: pointer; transition: transform 0.14s ease;
+    }
+    .big-card-inner:active { transform: scale(0.985); }
+    .big-photo { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .big-body { padding: 20px 22px 24px; }
+    .big-name {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 24px; letter-spacing: -0.4px;
+      line-height: 1.1;
+    }
+    .big-tag {
+      color: var(--muted); font-size: 14.5px; line-height: 1.5; margin-top: 8px;
+    }
+    .big-btn {
+      margin-top: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      width: 100%; background: var(--green); color: #fff; border: none;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.1px;
+      padding: 13px 0; border-radius: 999px; cursor: pointer;
+      box-shadow: 0 8px 18px rgba(22,163,74,0.30); transition: transform 0.12s ease;
+    }
+    .big-btn:active { transform: scale(0.97); }
+    .big-btn .ar { transition: transform 0.15s ease; }
+    .big-card-inner:active .big-btn .ar { transform: translateX(3px); }
+
+    /* dot indicators */
+    .dots {
+      display: flex; justify-content: center; gap: 8px;
+      padding: 16px var(--pad) 0;
+    }
+    .dot-i {
+      width: 8px; height: 8px; border-radius: 999px; background: #d8d1c6;
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+    .dot-i.active { width: 22px; background: var(--gold); }
+
+    /* ── 4. SOCIAL PROOF + TESTIMONIALS + CTA ──────── */
+    .proof { text-align: center; padding: 32px var(--pad) 4px; }
+    .proof .pin { color: var(--gold); font-size: 14px; letter-spacing: 3px; }
+    .proof h2 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px;
+      margin-top: 8px; color: var(--ink);
+    }
+    .proof h2 strong { color: var(--green); }
+
+    .reviews { padding: 30px var(--pad) 8px; }
+    .reviews h3 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 22px; letter-spacing: -0.4px;
+      margin-bottom: 16px;
+    }
+    .review-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(17,24,39,0.04);
+    }
+    .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 9px; }
+    .review-text { font-size: 14.5px; line-height: 1.55; color: #374151; }
+    .review-who { margin-top: 11px; font-size: 13px; font-weight: 600; }
+    .review-who span { color: var(--muted); font-weight: 400; }
+
+    .final-cta {
+      margin: 24px var(--pad) 40px; padding: 34px 26px 32px;
+      background: var(--ink); border-radius: 22px; text-align: center; color: #fff;
+    }
+    .final-cta h3 { font-family: 'DM Sans'; font-weight: 700; font-size: 25px; letter-spacing: -0.5px; }
+    .final-cta p { color: var(--gray-400); font-size: 14px; margin-top: 8px; line-height: 1.5; }
+    .btn-member {
+      margin-top: 20px; display: inline-block; width: 100%;
+      background: var(--green); color: #fff; border: none;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 16px; letter-spacing: -0.1px;
+      padding: 15px 0; border-radius: 999px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(22,163,74,0.32); transition: transform 0.12s ease;
+    }
+    .btn-member:active { transform: scale(0.97); }
+
+    /* ── 3. DETAIL PAGE ────────────────────────────── */
+    .detail-top {
+      display: flex; align-items: center;
+      padding: 16px var(--pad) 14px; position: sticky; top: 0; z-index: 20;
+      background: rgba(250,248,245,0.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Inter'; font-weight: 600; font-size: 15px; color: var(--ink);
+    }
+    .back-btn:active { opacity: 0.6; }
+
+    .detail-intro { padding: 16px var(--pad) 0; }
+    .detail-intro h1 { font-family: 'DM Sans'; font-weight: 700; font-size: 26px; letter-spacing: -0.6px; }
+    .detail-intro p { font-size: 14px; line-height: 1.5; color: #374151; margin-top: 8px; }
+    .trust {
+      display: flex; flex-wrap: wrap; gap: 6px 0; align-items: center;
+      margin-top: 12px; font-size: 12.5px; font-weight: 600; color: var(--green);
+    }
+    .trust span { display: inline-flex; align-items: center; }
+    .trust .dot { color: var(--gray-400); margin: 0 8px; font-weight: 400; }
+
+    .menu-head { padding: 18px var(--pad) 0; }
+    .menu-head h2 { font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px; }
+    .menu-head .sub { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+
+    .menu-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 14px var(--pad) 44px; align-items: stretch;
+    }
+    .dish {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .dish-img { width: 100%; height: 120px; object-fit: cover; display: block; }
+    .dish-body { padding: 10px 11px 11px; display: flex; flex-direction: column; flex: 1; }
+    .dish-name {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.2px;
+      line-height: 1.25;
+    }
+    .dish-desc {
+      font-size: 12.5px; color: var(--muted); line-height: 1.35; margin-top: 3px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .price { font-family: 'DM Sans'; font-weight: 700; font-size: 15px; }
+    .reserve {
+      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12px;
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
+    }
+    .reserve:active { transform: scale(0.93); background: var(--green-dark); }
+
+    /* mockup label chip */
+    .label-pill {
+      position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+      background: rgba(17,24,39,0.82); color: #fff; font-size: 11px; font-weight: 600;
+      padding: 5px 13px; border-radius: 999px; z-index: 100; letter-spacing: 0.04em;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="label-pill">Carousel · iPhone 402px</div>
+  <div class="phone">
+
+    <!-- ════════ HOME VIEW ════════ -->
+    <div class="view" id="home">
+
+      <!-- 1. VIDEO HERO -->
+      <section class="hero">
+        <img class="hero-media"
+             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=78"
+             alt="Plated dinner, overhead">
+        <div class="hero-scrim"></div>
+        <div class="hero-brand">
+          <div class="logo-mark">4D</div>
+          <div class="logo-text">4D <span class="gold">Supper Club</span></div>
+        </div>
+        <div class="hero-text" id="heroText">
+          <h1>Restaurant-Quality Dinners,<br><span class="gold">Delivered to Your Door</span></h1>
+          <div class="hero-sub" id="heroSub">by Chef Rich Dino · Riverview, FL</div>
+        </div>
+      </section>
+
+      <!-- 2. SERVICE CARDS — one at a time, swipe -->
+      <section class="carousel-wrap">
+        <div class="carousel" id="carousel">
+          <div class="big-card">
+            <div class="big-card-inner" onclick="openDetail()">
+              <img class="big-photo" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=760&q=74" alt="Weekly meals">
+              <div class="big-body">
+                <div class="big-name">Weekly Meals</div>
+                <div class="big-tag">Chef-prepared dinners delivered to your door every Sunday — six seasonal dishes to choose from.</div>
+                <button class="big-btn">Learn More <span class="ar">→</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="big-card">
+            <div class="big-card-inner">
+              <img class="big-photo" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=760&q=74" alt="Catering">
+              <div class="big-body">
+                <div class="big-name">Catering</div>
+                <div class="big-tag">Full-service catering for parties and events — Chef Rich brings the restaurant to your gathering.</div>
+                <button class="big-btn">Learn More <span class="ar">→</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="big-card">
+            <div class="big-card-inner">
+              <img class="big-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=760&q=74" alt="Private chef events">
+              <div class="big-body">
+                <div class="big-name">Private Chef Events</div>
+                <div class="big-tag">An exclusive multi-course dining experience prepared and plated in your home.</div>
+                <button class="big-btn">Learn More <span class="ar">→</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dots" id="dots">
+          <div class="dot-i active"></div>
+          <div class="dot-i"></div>
+          <div class="dot-i"></div>
+        </div>
+      </section>
+
+      <!-- 4a. SOCIAL PROOF -->
+      <section class="proof">
+        <div class="pin">★★★★★</div>
+        <h2>Trusted by <strong>200+ families</strong> in Riverview</h2>
+      </section>
+
+      <!-- 4b. TESTIMONIALS -->
+      <section class="reviews">
+        <h3>What Our Members Say</h3>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Sunday delivery has changed our week. Restaurant-quality food, zero effort, and the menu never gets old.”</div>
+          <div class="review-who">Maria L. <span>· Member since 2024</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Chef Rich catered our anniversary dinner and our guests are still talking about it weeks later.”</div>
+          <div class="review-who">Devon &amp; Amir <span>· Private event</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Real, scratch-made food I feel good feeding my kids. Skipping a week is effortless when life gets busy.”</div>
+          <div class="review-who">Jenna P. <span>· Member since 2023</span></div>
+        </div>
+      </section>
+
+      <!-- 4c. FINAL CTA -->
+      <section class="final-cta">
+        <h3>Ready to eat well?</h3>
+        <p>Join the table. Skip anytime, no commitments.</p>
+        <button class="btn-member">Become a Member</button>
+      </section>
+    </div>
+
+    <!-- ════════ DETAIL VIEW (Weekly Meals) ════════ -->
+    <div class="view" id="detail">
+      <div class="detail-top">
+        <button class="back-btn" onclick="closeDetail()">← Back</button>
+      </div>
+
+      <div class="detail-intro">
+        <h1>Weekly Meals</h1>
+        <p>Fresh, scratch-made meals prepared by Chef Rich Dino, delivered to your door every Sunday. Choose from 6 seasonal dishes each week.</p>
+        <div class="trust">
+          <span>No commitments</span><span class="dot">·</span>
+          <span>Skip anytime</span><span class="dot">·</span>
+          <span>Free delivery</span>
+        </div>
+      </div>
+
+      <div class="menu-head">
+        <h2>This Week’s Menu</h2>
+        <div class="sub">6 seasonal dishes · reserve your favorites</div>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Hero headline fade-in after the "video" finishes (~1.5s) ──
+    setTimeout(function () {
+      document.getElementById('heroText').classList.add('show');
+      document.getElementById('heroSub').classList.add('show');
+    }, 1500);
+
+    // ── Carousel dot sync — track whichever card is nearest viewport center ──
+    const carousel = document.getElementById('carousel');
+    const dots = Array.from(document.getElementById('dots').children);
+    function syncDots() {
+      const mid = carousel.scrollLeft + carousel.clientWidth / 2;
+      let best = 0, bestDist = Infinity;
+      Array.from(carousel.children).forEach(function (card, n) {
+        const c = card.offsetLeft + card.offsetWidth / 2;
+        const dist = Math.abs(c - mid);
+        if (dist < bestDist) { bestDist = dist; best = n; }
+      });
+      dots.forEach(function (d, n) { d.classList.toggle('active', n === best); });
+    }
+    carousel.addEventListener('scroll', syncDots, { passive: true });
+
+    // ── 6-dish grid ──
+    const DISHES = [
+      { name: 'Herb Roasted Chicken', desc: 'Free-range, lemon & thyme',   price: 18, img: '1598103442097-8b74394b95c6' },
+      { name: 'Pan-Seared Salmon',    desc: 'Wild salmon, dill butter',     price: 22, img: '1467003909585-2f8a72700288' },
+      { name: 'Wild Mushroom Risotto',desc: 'Arborio, parmesan, truffle',   price: 16, img: '1476124369491-e7addf5db371' },
+      { name: 'Harvest Grain Bowl',   desc: 'Farro, squash, tahini',        price: 14, img: '1512621776951-a57141f2eefd' },
+      { name: 'Braised Short Rib',    desc: 'Red wine, root vegetables',    price: 24, img: '1546964124-0cce460f38ef' },
+      { name: 'Seasonal Veg Curry',   desc: 'Coconut, chickpea, basmati',   price: 15, img: '1455619452474-d2be8b1e70cd' },
+    ];
+    document.getElementById('menuGrid').innerHTML = DISHES.map(function (d) {
+      return '<div class="dish">' +
+        '<img class="dish-img" src="https://images.unsplash.com/photo-' + d.img + '?auto=format&fit=crop&w=360&q=68" alt="' + d.name + '">' +
+        '<div class="dish-body">' +
+          '<div class="dish-name">' + d.name + '</div>' +
+          '<div class="dish-desc">' + d.desc + '</div>' +
+          '<div class="dish-foot">' +
+            '<span class="price">$' + d.price + '</span>' +
+            '<button class="reserve">Reserve</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // ── View transition ──
+    const home = document.getElementById('home');
+    const detail = document.getElementById('detail');
+    function openDetail() {
+      home.classList.add('out');
+      detail.classList.add('in');
+      detail.scrollTop = 0;
+    }
+    function closeDetail() {
+      home.classList.remove('out');
+      detail.classList.remove('in');
+    }
+  </script>
+</body>
+</html>
