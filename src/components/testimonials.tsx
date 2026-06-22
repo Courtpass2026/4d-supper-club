@@ -39,7 +39,7 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <figure
               key={t.name}
-              className="relative rounded-2xl border border-gray-200 bg-white p-8"
+              className="relative rounded-2xl bg-white p-8 shadow-[0_2px_24px_rgba(17,24,39,0.05)] transition-shadow duration-300 hover:shadow-[0_8px_36px_rgba(17,24,39,0.08)]"
             >
               <span
                 aria-hidden
@@ -47,7 +47,7 @@ export default function Testimonials() {
               >
                 &ldquo;
               </span>
-              <blockquote className="mb-5 pt-6 text-[0.95rem] leading-relaxed text-gray-700">
+              <blockquote className="mb-5 pt-6 text-[0.95rem] font-light leading-relaxed text-gray-700">
                 {t.quote}
               </blockquote>
               <figcaption className="flex items-center gap-3">

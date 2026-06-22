@@ -69,6 +69,50 @@ select:focus-visible,
   border-radius: 4px;
 }
 
+/*
+  Motion — calm, deliberate, premium. Nothing bouncy.
+  Scroll reveals fade up gently; the live status dot breathes.
+*/
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  Scroll-reveal: elements start hidden and animate in once the Reveal
+  component marks them in-view. Kept opacity-based so reduced-motion users
+  (below) snap straight to the final state with no movement.
+*/
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  animation: reveal-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* Live status indicator — a soft, slow breathing pulse. */
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+.status-dot {
+  animation: status-pulse 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -78,5 +122,9 @@ select:focus-visible,
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  /* Guarantee revealed content is visible even with motion disabled. */
+  .reveal {
+    opacity: 1;
   }
 }

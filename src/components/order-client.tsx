@@ -88,15 +88,15 @@ export default function OrderClient({ dishes }: { dishes: Dish[] }) {
                 {formatPrice(total)}
               </p>
               <p className="text-sm text-gray-500">
-                {itemCount} {itemCount === 1 ? "item" : "items"} in your order
+                {itemCount} {itemCount === 1 ? "meal" : "meals"} in your selection
               </p>
             </div>
             <button
               type="button"
               onClick={() => setCheckoutOpen(true)}
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-green-500 px-6 py-3 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:px-8"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-green-500 px-6 py-3 text-base font-semibold text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:px-8"
             >
-              Checkout
+              Confirm Selections
             </button>
           </div>
         </div>
@@ -128,48 +128,80 @@ function OrderCard({
   const imageUrl = resolveImageUrl(dish);
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg">
-      <div className="relative aspect-video w-full bg-gray-100">
+    <article className="group flex flex-col">
+      {/* Food is the hero — large, editorial, near-full-bleed. */}
+      <div
+        className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gray-100 ring-offset-2 transition-shadow ${
+          qty > 0 ? "ring-2 ring-green-500" : ""
+        }`}
+      >
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={dish.imageAlt ?? dish.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 360px"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400">
-            Photo coming soon
+          <div className="flex h-full w-full items-center justify-center text-sm font-medium text-gray-400">
+            Chef selections are being prepared
           </div>
         )}
+
+        {dish.chefRecommended && (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[0.66rem] font-bold uppercase tracking-wider text-gold-700 shadow-sm backdrop-blur">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            Chef Recommended
+          </span>
+        )}
+        {dish.availabilityNote && !dish.chefRecommended && (
+          <span className="absolute bottom-3 left-3 inline-flex items-center rounded-full bg-gray-900/85 px-3 py-1 text-[0.66rem] font-bold uppercase tracking-wider text-white backdrop-blur">
+            {dish.availabilityNote}
+          </span>
+        )}
         {qty > 0 && (
-          <span className="absolute right-3 top-3 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-gray-900 px-2 text-sm font-bold text-white shadow">
+          <span className="absolute right-3 top-3 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-green-500 px-2 text-sm font-bold text-gray-900 shadow">
             {qty}
           </span>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="mb-2 flex items-start justify-between gap-3">
-          <h3 className="font-heading text-lg font-bold leading-tight text-gray-900">
+      <div className="flex flex-1 flex-col px-1 pt-5">
+        {dish.contextLabel && (
+          <span className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-gold-600">
+            {dish.contextLabel}
+          </span>
+        )}
+
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="font-heading text-[1.75rem] font-bold leading-[1.1] tracking-tight text-gray-900">
             {dish.name}
           </h3>
-          <span className="shrink-0 font-heading text-lg font-extrabold text-gray-900">
+          <span className="shrink-0 pt-1 font-heading text-xl font-bold tracking-tight text-gray-900">
             {formatPrice(dish.price)}
           </span>
         </div>
 
-        <p className="mb-4 text-sm leading-relaxed text-gray-500">
+        <p className="mt-2.5 text-[0.95rem] font-light leading-relaxed text-gray-500">
           {dish.description}
         </p>
 
+        {dish.trustSignal && (
+          <p className="mt-3.5 flex items-center gap-2 text-[0.8rem] font-medium text-gray-600">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" aria-hidden="true" />
+            {dish.trustSignal}
+          </p>
+        )}
+
         {dish.dietaryTags && dish.dietaryTags.length > 0 && (
-          <ul className="mb-4 flex flex-wrap gap-1.5">
+          <ul className="mt-4 flex flex-wrap gap-1.5">
             {dish.dietaryTags.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-gold-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-gold-700"
+                className="rounded-full bg-gray-50 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wide text-gray-500"
               >
                 {tag}
               </li>
@@ -177,18 +209,18 @@ function OrderCard({
           </ul>
         )}
 
-        {/* Add button turns into a quantity stepper once in the cart. */}
-        <div className="mt-auto pt-1">
+        {/* Reserve turns into a quantity stepper once selected for the week. */}
+        <div className="mt-5 pt-1">
           {qty === 0 ? (
             <button
               type="button"
               onClick={onAdd}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-5 py-3 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-5 py-3 text-base font-semibold text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
             >
-              Add to Order
+              Reserve Meal
             </button>
           ) : (
-            <div className="flex items-center justify-between rounded-xl border-[1.5px] border-gray-300 p-1">
+            <div className="flex items-center justify-between rounded-xl border border-gray-200 p-1">
               <button
                 type="button"
                 onClick={() => onSetQty(qty - 1)}
@@ -201,7 +233,7 @@ function OrderCard({
                 className="font-heading text-base font-bold text-gray-900"
                 aria-live="polite"
               >
-                {qty} in order
+                {qty} selected
               </span>
               <button
                 type="button"
@@ -307,11 +339,11 @@ function CheckoutSheet({
               id={titleId}
               className="mb-3 font-heading text-2xl font-extrabold tracking-tight text-gray-900"
             >
-              Order received!
+              Your week is reserved!
             </h2>
             <p className="mb-8 max-w-[360px] text-base leading-relaxed text-gray-600">
-              Thanks for your order. Chef Rich will confirm your delivery details
-              by text shortly. Payment will be collected when we wire up
+              Thanks for your selections. Chef Rich will confirm your delivery
+              details by text shortly. Payment will be collected when we wire up
               checkout.
             </p>
             <button
@@ -330,10 +362,10 @@ function CheckoutSheet({
                   id={titleId}
                   className="font-heading text-xl font-extrabold tracking-tight text-gray-900"
                 >
-                  Checkout
+                  Confirm Selections
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {lines.reduce((n, l) => n + l.qty, 0)} items &middot;{" "}
+                  {lines.reduce((n, l) => n + l.qty, 0)} meals &middot;{" "}
                   {formatPrice(total)}
                 </p>
               </div>
@@ -460,9 +492,9 @@ function CheckoutSheet({
               <button
                 type="submit"
                 form="checkout-form"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-6 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-6 py-3.5 text-base font-semibold text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
               >
-                Place Order
+                Confirm Selections
               </button>
             </div>
           </>

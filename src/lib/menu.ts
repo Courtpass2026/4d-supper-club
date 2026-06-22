@@ -17,6 +17,18 @@ export type Dish = {
   /** Plain image URL — used by the mock data below and as a fallback. */
   imageUrl?: string;
   imageAlt?: string;
+  /**
+   * Premium presentational signals (mock for now). These set the membership
+   * tone in place of generic star ratings.
+   */
+  /** Flags the dish as a Chef Recommended pick (shown over the image). */
+  chefRecommended?: boolean;
+  /** Confidence signal, e.g. "127 members receiving this week". */
+  trustSignal?: string;
+  /** Contextual, "knows-you" label, e.g. "New this week". */
+  contextLabel?: string;
+  /** Scarcity cue, e.g. "Limited — 3 selections left". */
+  availabilityNote?: string;
 };
 
 export type WeeklyMenu = {
@@ -90,6 +102,9 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=450&fit=crop&q=80",
       imageAlt: "Seared salmon fillet plated with herbs and lemon",
+      chefRecommended: true,
+      trustSignal: "127 members receiving this week",
+      contextLabel: "New this week",
     },
     {
       name: "Braised Short Ribs over Polenta",
@@ -101,6 +116,8 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=450&fit=crop&q=80",
       imageAlt: "Braised beef short ribs in rich sauce",
+      trustSignal: "Most reordered meal",
+      availabilityNote: "Limited — 3 selections left",
     },
     {
       name: "Roasted Chicken Provençal",
@@ -112,6 +129,7 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&h=450&fit=crop&q=80",
       imageAlt: "Golden roasted chicken with herbs",
+      contextLabel: "You had this last month",
     },
     {
       name: "Wild Mushroom Risotto",
@@ -123,6 +141,8 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&h=450&fit=crop&q=80",
       imageAlt: "Creamy mushroom risotto in a bowl",
+      trustSignal: "Seasonal favorite",
+      contextLabel: "Pairs with your Thursday selection",
     },
     {
       name: "Maple-Roasted Root Vegetables",
@@ -134,6 +154,7 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=450&fit=crop&q=80",
       imageAlt: "Tray of roasted root vegetables",
+      trustSignal: "94 members receiving this week",
     },
     {
       name: "Four-Cheese Mac & Cheese",
@@ -145,6 +166,7 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=800&h=450&fit=crop&q=80",
       imageAlt: "Baked macaroni and cheese with golden crust",
+      chefRecommended: true,
     },
     {
       name: "Flourless Chocolate Torte",
@@ -156,6 +178,7 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=450&fit=crop&q=80",
       imageAlt: "Slice of rich chocolate torte",
+      trustSignal: "Most reordered dessert",
     },
     {
       name: "Vanilla Bean Cheesecake",
@@ -167,6 +190,7 @@ export const MOCK_WEEKLY_MENU: WeeklyMenu = {
       imageUrl:
         "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=450&fit=crop&q=80",
       imageAlt: "Slice of cheesecake topped with berries",
+      contextLabel: "New this week",
     },
   ],
 };

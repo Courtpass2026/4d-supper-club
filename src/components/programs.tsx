@@ -4,7 +4,7 @@ const programs = [
   {
     img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=400&fit=crop&q=80",
     alt: "A beautifully plated family dinner with roasted vegetables and protein",
-    tag: "Most Popular",
+    tag: "Chef Recommended",
     title: "Weekly Supper Club",
     body: "Two or three chef-prepared entrees delivered each week. Enough to feed the whole family with zero effort.",
     items: [
@@ -63,25 +63,25 @@ export default function Programs() {
           {programs.map((p) => (
             <div
               key={p.title}
-              className="group overflow-hidden rounded-2xl border border-gray-200 border-t-4 border-t-gold-500 bg-white transition-all hover:-translate-y-1 hover:border-gray-300 hover:border-t-gold-500 hover:shadow-lg"
+              className="group overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(17,24,39,0.08)]"
             >
-              <div className="relative h-[200px] w-full bg-gray-100">
+              <div className="relative h-[220px] w-full overflow-hidden bg-gray-100">
                 <Image
                   src={p.img}
                   alt={p.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 360px"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
               </div>
-              <div className="p-6">
-                <span className="mb-3 inline-block rounded-full bg-gold-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-gold-700">
+              <div className="px-1 pt-5">
+                <span className="mb-3 inline-block text-[0.7rem] font-bold uppercase tracking-[0.14em] text-gold-600">
                   {p.tag}
                 </span>
-                <h3 className="mb-2 text-lg font-bold text-gray-900">
+                <h3 className="mb-2 font-heading text-[1.4rem] font-bold tracking-tight text-gray-900">
                   {p.title}
                 </h3>
-                <p className="mb-4 text-sm leading-relaxed text-gray-500">
+                <p className="mb-4 text-[0.95rem] font-light leading-relaxed text-gray-500">
                   {p.body}
                 </p>
                 <ul className="flex flex-col gap-1.5">

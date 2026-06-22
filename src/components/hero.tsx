@@ -25,7 +25,7 @@ export default function Hero() {
           <span className="text-gold-600">Delivered to Your Door</span>
         </h1>
 
-        <p className="mx-auto mb-9 max-w-[540px] text-[clamp(1.05rem,2vw,1.2rem)] leading-relaxed text-gray-600">
+        <p className="mx-auto mb-9 max-w-[540px] text-[clamp(1.05rem,2vw,1.2rem)] font-light leading-relaxed text-gray-500">
           Chef Rich Dino prepares seasonal, scratch-made meals so you can skip
           the cooking and still gather around a great dinner.
         </p>
@@ -33,13 +33,13 @@ export default function Hero() {
         <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/order"
-            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
           >
-            Start Your Subscription
+            Become a Member
           </Link>
           <Link
             href="/menu"
-            className="inline-flex items-center justify-center rounded-xl border-[1.5px] border-gray-300 px-8 py-3.5 text-base font-semibold text-gray-800 transition-all hover:bg-gray-50"
+            className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-8 py-3.5 text-base font-semibold text-gray-800 transition-all duration-200 hover:-translate-y-px hover:border-gray-300 hover:bg-gray-50"
           >
             See This Week&apos;s Menu
           </Link>

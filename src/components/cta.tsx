@@ -7,15 +7,15 @@ export default function Cta() {
         <h2 className="mb-4 font-heading text-[clamp(1.8rem,4vw,2.5rem)] font-extrabold leading-tight tracking-tight">
           Ready to Reclaim Your Evenings?
         </h2>
-        <p className="mx-auto mb-9 max-w-[500px] text-lg leading-relaxed text-gray-400">
+        <p className="mx-auto mb-9 max-w-[500px] text-lg font-light leading-relaxed text-gray-400">
           Join 200+ Riverview families who traded cooking stress for chef-made
           dinners. Your first week ships free.
         </p>
         <Link
           href="/order"
-          className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-gray-900 transition-colors hover:bg-green-400"
+          className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-green-400 hover:shadow-md"
         >
-          Get Started Today
+          Become a Member
         </Link>
       </div>
     </section>
