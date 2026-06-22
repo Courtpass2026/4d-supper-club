@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>4D Supper Club — Below the Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green: #16a34a;
+    --green-hover: #15803d;
+    --gold: #c5a55a;
+    --gold-soft: #e3cd97;
+    --gold-400: #cdb069;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-50: #f9fafb;
+    --cream: #faf8f5;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --font-head: "DM Sans", "Inter", system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    color: var(--gray-900);
+    background: #fff;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+
+  .wrap { max-width: 402px; margin: 0 auto; background: #fff; overflow: hidden; }
+
+  /* ---------- 1. VIDEO HERO PLACEHOLDER ---------- */
+  .video {
+    position: relative;
+    height: 42vh;
+    min-height: 320px;
+    background:
+      radial-gradient(120% 80% at 50% 10%, #1f2937 0%, #0d0d0d 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .video__label {
+    font-family: var(--font-head);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.32);
+  }
+  .pill {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(197,165,90,0.5);
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    color: var(--gold-soft);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .pill .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgba(22,163,74,0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.55); }
+    70% { box-shadow: 0 0 0 7px rgba(22,163,74,0); }
+    100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+  }
+
+  /* ---------- 2. HERO TEXT (tightened) ---------- */
+  .herotext {
+    padding: 24px 22px 48px;
+    text-align: center;
+  }
+  .herotext h1 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 2.1rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+  }
+  .herotext h1 .gold { color: var(--gold); }
+  .herotext p.sub {
+    margin: 16px auto 0;
+    max-width: 330px;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--gray-500);
+  }
+  .ctas {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    border-radius: 12px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+  .btn--primary {
+    background: var(--green);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(22,163,74,0.28);
+  }
+  .btn--ghost {
+    background: #fff;
+    color: var(--gray-900);
+    border: 1.5px solid #e5e7eb;
+  }
+  .trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-top: 26px;
+  }
+  .trust span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--gray-700);
+  }
+  .trust svg { flex-shrink: 0; }
+  .divider {
+    width: 60px;
+    height: 1px;
+    margin: 34px auto 0;
+    background: rgba(205,176,105,0.4);
+  }
+
+  /* ---------- 3. CONFIDENCE STATEMENT ---------- */
+  .confidence {
+    background: var(--cream);
+    padding: 64px 22px;
+    text-align: center;
+  }
+  .confidence h2 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.85rem;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .confidence h2 .gold { color: var(--gold); }
+  .confidence p {
+    margin: 14px auto 0;
+    max-width: 300px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--gray-500);
+  }
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 36px;
+  }
+  .stat { text-align: center; }
+  .stat .num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.7rem;
+    color: var(--green);
+    letter-spacing: -0.01em;
+  }
+  .stat .lbl {
+    margin-top: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+  }
+
+  /* ---------- 4. THIS WEEK'S SELECTION ---------- */
+  .week { padding: 56px 0 8px; }
+  .week__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 22px 18px;
+  }
+  .week__head h2 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+  }
+  .week__link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .scroller {
+    display: flex;
+    gap: 16px;
+    padding: 4px 22px 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroller::-webkit-scrollbar { display: none; }
+  .card {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #f0eee9;
+    box-shadow: 0 10px 30px rgba(17,24,39,0.06);
+  }
+  .card__media { position: relative; height: 190px; }
+  .card__media img { width: 100%; height: 100%; object-fit: cover; }
+  .badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: rgba(17,24,39,0.78);
+    backdrop-filter: blur(4px);
+  }
+  .badge--gold { background: var(--gold); color: #1a1407; }
+  .badge--green { background: var(--green); }
+  .card__body { padding: 16px 16px 18px; }
+  .card__name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--gray-900);
+  }
+  .card__desc {
+    margin-top: 7px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--gray-500);
+    min-height: 38px;
+  }
+  .card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+  .card__price {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--gray-900);
+  }
+  .card__price span { font-size: 0.78rem; font-weight: 500; color: var(--gray-500); }
+  .reserve {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 10px;
+    background: var(--green);
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.86rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .scroll-hint {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #c5beb0;
+    padding: 6px 0 0;
+  }
+
+  /* ---------- 5. HOW IT WORKS ---------- */
+  .how { padding: 60px 22px 56px; }
+  .how__head { text-align: center; margin-bottom: 8px; }
+  .eyebrow {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .how__head h2 {
+    margin-top: 10px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.65rem;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .step {
+    margin-top: 38px;
+  }
+  .step__media {
+    position: relative;
+    height: 200px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(17,24,39,0.10);
+  }
+  .step__media img { width: 100%; height: 100%; object-fit: cover; }
+  .step__text { padding: 18px 4px 0; position: relative; }
+  .step__num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 3rem;
+    line-height: 1;
+    color: rgba(197,165,90,0.45);
+    letter-spacing: -0.03em;
+  }
+  .step__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    color: var(--gray-900);
+    margin-top: 4px;
+  }
+  .step__desc {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--gray-500);
+  }
+
+  /* ---------- 6. PROGRAMS TEASER ---------- */
+  .programs {
+    background: var(--gray-900);
+    padding: 56px 22px 64px;
+    text-align: center;
+  }
+  .programs .eyebrow { color: var(--gold-soft); }
+  .programs h2 {
+    margin-top: 10px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.85rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .programs p {
+    margin: 12px auto 0;
+    max-width: 300px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.55);
+  }
+  .programs .dots { margin-top: 26px; display: flex; gap: 7px; justify-content: center; }
+  .programs .dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.22); }
+  .programs .dots i:first-child { background: var(--gold); width: 22px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. VIDEO HERO -->
+  <section class="video">
+    <div class="pill"><span class="dot"></span> Sunday · Delivery Day</div>
+    <div class="video__label">VIDEO HERO</div>
+  </section>
+
+  <!-- 2. HERO TEXT -->
+  <section class="herotext">
+    <h1>Restaurant-Quality Dinners, <span class="gold">Delivered to Your Door</span></h1>
+    <p class="sub">Chef Rich cooks every dish from scratch and delivers it hot to Riverview families each Sunday.</p>
+    <div class="ctas">
+      <a class="btn btn--primary" href="#">View This Week's Menu</a>
+      <a class="btn btn--ghost" href="#">How It Works</a>
+    </div>
+    <div class="trust">
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#c5a55a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        No subscription
+      </span>
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#c5a55a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Free local delivery
+      </span>
+      <span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#c5a55a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Scratch-made
+      </span>
+    </div>
+    <div class="divider"></div>
+  </section>
+
+  <!-- 3. CONFIDENCE STATEMENT -->
+  <section class="confidence">
+    <h2>Serving <span class="gold">200+ Families</span> in Riverview Every Sunday</h2>
+    <p>Fresh ingredients. Scratch-made recipes. Delivered to your door.</p>
+    <div class="stats">
+      <div class="stat"><div class="num">200+</div><div class="lbl">Families</div></div>
+      <div class="stat"><div class="num">52</div><div class="lbl">Weeks Running</div></div>
+      <div class="stat"><div class="num">4.9★</div><div class="lbl">Avg Rating</div></div>
+    </div>
+  </section>
+
+  <!-- 4. THIS WEEK'S SELECTION -->
+  <section class="week">
+    <div class="week__head">
+      <h2>This Week's Selection</h2>
+      <a class="week__link" href="#">View Full Menu →</a>
+    </div>
+    <div class="scroller">
+
+      <article class="card">
+        <div class="card__media">
+          <span class="badge badge--gold">Chef Recommended</span>
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop" alt="Herb-roasted chicken plate" />
+        </div>
+        <div class="card__body">
+          <div class="card__name">Herb-Roasted Chicken</div>
+          <p class="card__desc">Pan-jus chicken over garlic mash with charred seasonal greens.</p>
+          <div class="card__foot">
+            <div class="card__price">$16 <span>/ plate</span></div>
+            <a class="reserve" href="#">Reserve</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__media">
+          <span class="badge badge--green">Most Reordered</span>
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600&auto=format&fit=crop" alt="Short rib pasta" />
+        </div>
+        <div class="card__body">
+          <div class="card__name">Braised Short Rib</div>
+          <p class="card__desc">Slow-braised short rib with creamy parmesan polenta and gremolata.</p>
+          <div class="card__foot">
+            <div class="card__price">$19 <span>/ plate</span></div>
+            <a class="reserve" href="#">Reserve</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__media">
+          <span class="badge">New This Week</span>
+          <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=600&auto=format&fit=crop" alt="Pan-seared salmon" />
+        </div>
+        <div class="card__body">
+          <div class="card__name">Pan-Seared Salmon</div>
+          <p class="card__desc">Crisp-skin salmon with lemon-butter orzo and roasted asparagus.</p>
+          <div class="card__foot">
+            <div class="card__price">$21 <span>/ plate</span></div>
+            <a class="reserve" href="#">Reserve</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+    <div class="scroll-hint">← swipe to browse →</div>
+  </section>
+
+  <!-- 5. HOW IT WORKS -->
+  <section class="how">
+    <div class="how__head">
+      <div class="eyebrow">How It Works</div>
+      <h2>Dinner on Your Table in Three Simple Steps</h2>
+    </div>
+
+    <!-- Step 1: photo top, text below -->
+    <div class="step">
+      <div class="step__media">
+        <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?q=80&w=800&auto=format&fit=crop" alt="Fresh ingredients in the kitchen" />
+      </div>
+      <div class="step__text">
+        <div class="step__num">01</div>
+        <div class="step__title">Pick Your Plan</div>
+        <p class="step__desc">Browse this week's menu and choose your dishes — no subscription, order only when you want to.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step__media">
+        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop" alt="Meals packaged for delivery" />
+      </div>
+      <div class="step__text">
+        <div class="step__num">02</div>
+        <div class="step__title">We Cook &amp; Deliver</div>
+        <p class="step__desc">Chef Rich cooks everything from scratch Sunday morning and delivers it hot, right to your door.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step__media">
+        <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=800&auto=format&fit=crop" alt="Family dinner served at the table" />
+      </div>
+      <div class="step__text">
+        <div class="step__num">03</div>
+        <div class="step__title">Heat, Serve, Enjoy</div>
+        <p class="step__desc">Warm it up when you're ready and sit down to a restaurant-quality dinner — no cooking, no cleanup.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PROGRAMS TEASER -->
+  <section class="programs">
+    <div class="eyebrow">What We Offer</div>
+    <h2>Our Programs</h2>
+    <p>From weekly family dinners to office lunches and special events — find the plan that fits your table.</p>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </section>
+
+</div>
+</body>
+</html>
