@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>4D Supper Club — Hero A · Full-Bleed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green: #16a34a;
+    --green-hover: #15803d;
+    --gold: #c5a55a;
+    --gold-soft: #e3cd97;
+    --ink: #1f2937;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --font-head: "DM Sans", "Inter", system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: #0d0d0d;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  /* ---------- NAV (transparent over image) ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 22px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
+  }
+  .logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.18rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .logo .gold { color: var(--gold-soft); }
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+  }
+  .hamburger span {
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  /* ---------- HERO (full-bleed image) ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1400&auto=format&fit=crop") center/cover no-repeat;
+    transform: scale(1.02);
+  }
+  /* gradient overlay — heavier at the bottom for text contrast */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.28) 30%,
+      rgba(0,0,0,0.45) 62%,
+      rgba(10,10,10,0.92) 100%
+    );
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 84px 22px 30px;
+  }
+
+  /* ---------- CAPSULE (top, white/gold) ---------- */
+  .capsule {
+    align-self: center;
+    text-align: center;
+    width: 100%;
+    max-width: 360px;
+  }
+  .capsule__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(197,165,90,0.5);
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    color: var(--gold-soft);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 0 rgba(197,165,90,0.7);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(197,165,90,0.65); }
+    70%  { box-shadow: 0 0 0 9px rgba(197,165,90,0); }
+    100% { box-shadow: 0 0 0 0 rgba(197,165,90,0); }
+  }
+  .capsule__line {
+    margin-top: 12px;
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.18rem;
+    letter-spacing: -0.01em;
+  }
+  .capsule__sub {
+    margin-top: 6px;
+    color: rgba(255,255,255,0.72);
+    font-size: 0.82rem;
+    font-weight: 300;
+    line-height: 1.45;
+  }
+  /* 7-dot timeline */
+  .timeline {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    margin: 18px auto 0;
+    max-width: 300px;
+  }
+  .timeline li {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .timeline .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.28);
+  }
+  .timeline .dot.past { background: rgba(255,255,255,0.55); }
+  .timeline .dot.active {
+    width: 9px; height: 9px;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px rgba(197,165,90,0.25);
+  }
+  .timeline .lbl {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .timeline .lbl.active { color: var(--gold-soft); }
+
+  /* ---------- HERO CONTENT (centered, bottom) ---------- */
+  .hero__content {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 36px;
+  }
+  .hero__h1 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    color: #fff;
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .hero__h1 .gold { color: var(--gold-soft); }
+  .hero__sub {
+    margin: 16px auto 0;
+    max-width: 320px;
+    color: rgba(255,255,255,0.78);
+    font-size: 0.94rem;
+    font-weight: 300;
+    line-height: 1.55;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 15px 34px;
+    border-radius: 14px;
+    background: var(--green);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 8px 24px rgba(22,163,74,0.4);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .cta:active { transform: translateY(1px); background: var(--green-hover); }
+
+  /* trust items */
+  .trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-top: 26px;
+  }
+  .trust span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.72);
+    font-size: 0.76rem;
+    font-weight: 500;
+  }
+  .trust svg { color: var(--gold-soft); }
+
+  /* scroll hint */
+  .scroll-hint {
+    margin: 22px auto 0;
+    width: 22px; height: 22px;
+    color: rgba(255,255,255,0.5);
+    animation: bob 2s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* ---------- HOW IT WORKS TEASER ---------- */
+  .teaser {
+    background: #0a0a0a;
+    text-align: center;
+    padding: 48px 22px 60px;
+  }
+  .teaser .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .teaser h2 {
+    margin-top: 12px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .teaser p {
+    margin: 14px auto 0;
+    max-width: 300px;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="logo" href="#">4D <span class="gold">Supper Club</span></a>
+    <button class="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__scrim"></div>
+
+    <div class="hero__inner">
+
+      <!-- Weekly Status Capsule -->
+      <div class="capsule">
+        <span class="capsule__badge">
+          <span class="status-dot"></span>
+          Sunday · Delivery Day
+        </span>
+        <div class="capsule__line">Your Meals Are On The Way</div>
+        <p class="capsule__sub">Chef Rich's kitchen is out for delivery across Riverview today. Keep an eye on your door.</p>
+
+        <ol class="timeline">
+          <li><span class="dot past"></span><span class="lbl">Mon</span></li>
+          <li><span class="dot past"></span><span class="lbl">Tue</span></li>
+          <li><span class="dot past"></span><span class="lbl">Wed</span></li>
+          <li><span class="dot past"></span><span class="lbl">Thu</span></li>
+          <li><span class="dot past"></span><span class="lbl">Fri</span></li>
+          <li><span class="dot past"></span><span class="lbl">Sat</span></li>
+          <li><span class="dot active"></span><span class="lbl active">Sun</span></li>
+        </ol>
+      </div>
+
+      <!-- Hero content -->
+      <div class="hero__content">
+        <h1 class="hero__h1">Restaurant-Quality Dinners, <span class="gold">Delivered to Your Door</span></h1>
+        <p class="hero__sub">Chef Rich Dino prepares seasonal, scratch-made meals so you can skip the cooking and still gather around a great dinner.</p>
+
+        <a class="cta" href="#">
+          Become a Member
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <div class="trust">
+          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>No commitments</span>
+          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Skip or cancel anytime</span>
+          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Free Riverview delivery</span>
+        </div>
+
+        <svg class="scroll-hint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS TEASER -->
+  <section class="teaser">
+    <div class="eyebrow">How It Works</div>
+    <h2>Dinner on Your Table in Three Simple Steps</h2>
+    <p>We handle the shopping, the prep, and the delivery. All you do is eat.</p>
+  </section>
+
+</body>
+</html>
