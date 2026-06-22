@@ -27,7 +27,7 @@ export default function Testimonials() {
     <section id="testimonials" className="bg-gray-50 px-6 py-20">
       <div className="mx-auto max-w-[1120px]">
         <div className="mx-auto mb-14 max-w-[600px] text-center">
-          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             What Our Members Say
           </div>
           <h2 className="font-heading text-[clamp(1.6rem,3.5vw,2.25rem)] font-extrabold leading-tight tracking-tight text-gray-900">
@@ -43,7 +43,7 @@ export default function Testimonials() {
             >
               <span
                 aria-hidden
-                className="absolute left-6 top-4 font-serif text-5xl leading-none text-green-400"
+                className="absolute left-6 top-4 font-serif text-5xl leading-none text-gold-400"
               >
                 &ldquo;
               </span>
@@ -51,7 +51,7 @@ export default function Testimonials() {
                 {t.quote}
               </blockquote>
               <figcaption className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-[0.85rem] font-bold text-green-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-50 text-[0.85rem] font-bold text-gold-700">
                   {t.initials}
                 </div>
                 <div>

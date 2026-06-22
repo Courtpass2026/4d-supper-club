@@ -47,7 +47,7 @@ export default function Programs() {
     <section id="menu" className="px-6 py-20">
       <div className="mx-auto max-w-[1120px]">
         <div className="mx-auto mb-14 max-w-[600px] text-center">
-          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             Our Programs
           </div>
           <h2 className="mb-4 font-heading text-[clamp(1.6rem,3.5vw,2.25rem)] font-extrabold leading-tight tracking-tight text-gray-900">
@@ -63,7 +63,7 @@ export default function Programs() {
           {programs.map((p) => (
             <div
               key={p.title}
-              className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg"
+              className="group overflow-hidden rounded-2xl border border-gray-200 border-t-4 border-t-gold-500 bg-white transition-all hover:-translate-y-1 hover:border-gray-300 hover:border-t-gold-500 hover:shadow-lg"
             >
               <div className="relative h-[200px] w-full bg-gray-100">
                 <Image
@@ -75,7 +75,7 @@ export default function Programs() {
                 />
               </div>
               <div className="p-6">
-                <span className="mb-3 inline-block rounded-full bg-green-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-green-600">
+                <span className="mb-3 inline-block rounded-full bg-gold-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-gold-700">
                   {p.tag}
                 </span>
                 <h3 className="mb-2 text-lg font-bold text-gray-900">
@@ -90,7 +90,7 @@ export default function Programs() {
                       key={item}
                       className="flex items-center gap-2 text-[0.85rem] text-gray-600"
                     >
-                      <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-green-400" />
+                      <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-gold-500" />
                       {item}
                     </li>
                   ))}

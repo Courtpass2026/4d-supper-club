@@ -315,7 +315,7 @@ function inputClass(hasError: boolean): string {
   return `w-full rounded-lg border bg-white px-3.5 py-2.5 text-base text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:ring-2 ${
     hasError
       ? "border-red-400 focus:border-red-500 focus:ring-red-500/25"
-      : "border-gray-300 focus:border-green-500 focus:ring-green-500/25"
+      : "border-gray-300 focus:border-gold-500 focus:ring-gold-500/25"
   }`;
 }
 

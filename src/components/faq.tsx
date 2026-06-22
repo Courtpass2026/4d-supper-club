@@ -36,7 +36,7 @@ export default function Faq() {
     <section id="faq" className="bg-gray-50 px-6 py-20">
       <div className="mx-auto max-w-[1120px]">
         <div className="mx-auto mb-14 max-w-[600px] text-center">
-          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             FAQ
           </div>
           <h2 className="font-heading text-[clamp(1.6rem,3.5vw,2.25rem)] font-extrabold leading-tight tracking-tight text-gray-900">
@@ -51,7 +51,7 @@ export default function Faq() {
               <div
                 key={item.q}
                 className={`overflow-hidden rounded-xl border bg-white transition-colors ${
-                  isOpen ? "border-green-400" : "border-gray-200"
+                  isOpen ? "border-gold-400" : "border-gray-200"
                 }`}
               >
                 <button
@@ -63,7 +63,7 @@ export default function Faq() {
                   {item.q}
                   <svg
                     className={`shrink-0 transition-transform duration-300 ${
-                      isOpen ? "rotate-180 text-green-500" : "text-gray-400"
+                      isOpen ? "rotate-180 text-gold-600" : "text-gray-400"
                     }`}
                     width="18"
                     height="18"

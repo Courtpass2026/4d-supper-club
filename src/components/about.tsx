@@ -22,7 +22,7 @@ export default function About() {
           </div>
 
           <div>
-            <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+            <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
               Meet Your Chef
             </div>
             <h2 className="mb-5 font-heading text-[clamp(1.6rem,3.5vw,2.25rem)] font-extrabold leading-tight tracking-tight text-gray-900">
@@ -47,7 +47,7 @@ export default function About() {
             <div className="mt-7 flex gap-8">
               {stats.map((s) => (
                 <div key={s.label} className="text-center">
-                  <div className="text-[1.75rem] font-extrabold text-green-500">
+                  <div className="text-[1.75rem] font-extrabold text-gold-600">
                     {s.num}
                   </div>
                   <div className="text-xs font-medium text-gray-500">

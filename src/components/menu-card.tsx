@@ -47,7 +47,7 @@ export default function MenuCard({ dish }: { dish: Dish }) {
             {dish.name}
           </h3>
           {typeof dish.price === "number" && (
-            <span className="shrink-0 font-heading text-lg font-extrabold text-green-600">
+            <span className="shrink-0 font-heading text-lg font-extrabold text-gray-900">
               {formatPrice(dish.price)}
             </span>
           )}
@@ -64,7 +64,7 @@ export default function MenuCard({ dish }: { dish: Dish }) {
             {dish.dietaryTags.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-green-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-green-600"
+                className="rounded-full bg-gold-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-gold-700"
               >
                 {tag}
               </li>

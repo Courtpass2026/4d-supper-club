@@ -45,7 +45,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="bg-gray-50 px-6 py-20">
       <div className="mx-auto max-w-[1120px]">
         <div className="mx-auto mb-14 max-w-[600px] text-center">
-          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             How It Works
           </div>
           <h2 className="mb-4 font-heading text-[clamp(1.6rem,3.5vw,2.25rem)] font-extrabold leading-tight tracking-tight text-gray-900">
@@ -59,12 +59,12 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
           {steps.map((s) => (
             <div key={s.num} className="px-6 py-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-xl bg-green-50">
-                <svg className="text-green-500" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-xl bg-gold-50">
+                <svg className="text-gold-600" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   {s.icon}
                 </svg>
               </div>
-              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-green-500">
+              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-gold-600">
                 {s.num}
               </div>
               <h3 className="mb-2 text-lg font-bold text-gray-900">{s.title}</h3>

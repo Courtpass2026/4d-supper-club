@@ -6,11 +6,20 @@
   build matches the static landing page closely.
 */
 @theme {
-  /* Brand greens */
+  /* Brand greens — reserved for primary CTAs + success states */
   --color-green-50: #e8f5e9;
   --color-green-400: #66bb6a;
   --color-green-500: #4caf50;
   --color-green-600: #388e3c;
+
+  /* Warm gold — decorative accents (eyebrows, steps, quote marks,
+     dietary pills, FAQ chevrons, card accents) */
+  --color-gold-50: #f6efdd;
+  --color-gold-100: #ece0c0;
+  --color-gold-400: #d0b06a;
+  --color-gold-500: #c5a55a;
+  --color-gold-600: #a98a42;
+  --color-gold-700: #856a2e;
 
   /* Neutral gray scale */
   --color-gray-50: #f9fafb;

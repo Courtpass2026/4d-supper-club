@@ -144,7 +144,7 @@ function OrderCard({
           </div>
         )}
         {qty > 0 && (
-          <span className="absolute right-3 top-3 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-green-600 px-2 text-sm font-bold text-white shadow">
+          <span className="absolute right-3 top-3 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-gray-900 px-2 text-sm font-bold text-white shadow">
             {qty}
           </span>
         )}
@@ -155,7 +155,7 @@ function OrderCard({
           <h3 className="font-heading text-lg font-bold leading-tight text-gray-900">
             {dish.name}
           </h3>
-          <span className="shrink-0 font-heading text-lg font-extrabold text-green-600">
+          <span className="shrink-0 font-heading text-lg font-extrabold text-gray-900">
             {formatPrice(dish.price)}
           </span>
         </div>
@@ -169,7 +169,7 @@ function OrderCard({
             {dish.dietaryTags.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-green-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-green-600"
+                className="rounded-full bg-gold-50 px-2.5 py-1 text-[0.7rem] font-bold uppercase tracking-wide text-gold-700"
               >
                 {tag}
               </li>
@@ -188,12 +188,12 @@ function OrderCard({
               Add to Order
             </button>
           ) : (
-            <div className="flex items-center justify-between rounded-xl border-[1.5px] border-green-500 p-1">
+            <div className="flex items-center justify-between rounded-xl border-[1.5px] border-gray-300 p-1">
               <button
                 type="button"
                 onClick={() => onSetQty(qty - 1)}
                 aria-label={`Remove one ${dish.name}`}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-xl font-bold text-green-600 transition-colors hover:bg-green-50"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-xl font-bold text-gray-700 transition-colors hover:bg-gray-100"
               >
                 &minus;
               </button>
@@ -207,7 +207,7 @@ function OrderCard({
                 type="button"
                 onClick={() => onSetQty(qty + 1)}
                 aria-label={`Add one ${dish.name}`}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-xl font-bold text-green-600 transition-colors hover:bg-green-50"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-xl font-bold text-gray-700 transition-colors hover:bg-gray-100"
               >
                 +
               </button>
@@ -380,7 +380,7 @@ function CheckoutSheet({
                 ))}
                 <li className="mt-3 flex items-center justify-between border-t border-gray-200 pt-3 text-base font-bold">
                   <span className="text-gray-900">Total</span>
-                  <span className="text-green-600">{formatPrice(total)}</span>
+                  <span className="text-gray-900">{formatPrice(total)}</span>
                 </li>
               </ul>
 
@@ -473,7 +473,7 @@ function CheckoutSheet({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-base text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/25";
+  "w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-base text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/25";
 
 function Field({
   label,

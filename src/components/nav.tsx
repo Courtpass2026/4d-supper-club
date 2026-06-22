@@ -45,7 +45,7 @@ export default function Nav() {
       >
         <Link
           href="/"
-          className="text-xl font-extrabold tracking-tight text-green-600"
+          className="text-xl font-extrabold tracking-tight text-gray-900"
           aria-label="4D Supper Club home"
           onClick={() => setOpen(false)}
         >

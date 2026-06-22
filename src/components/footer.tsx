@@ -23,7 +23,7 @@ export default function Footer() {
         <div className="max-w-[280px] sm:col-span-2 lg:col-span-1">
           <Link
             href="/"
-            className="mb-3 block text-lg font-extrabold tracking-tight text-green-600"
+            className="mb-3 block text-lg font-extrabold tracking-tight text-white"
           >
             4D <span className="text-white">Supper Club</span>
           </Link>

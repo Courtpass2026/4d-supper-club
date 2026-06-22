@@ -11,9 +11,9 @@ export default function CateringPage() {
   return (
     <main className="bg-white">
       {/* Hero */}
-      <section className="bg-gradient-to-b from-green-50 to-white px-6 pt-16 pb-12 text-center sm:pt-20 sm:pb-14">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-6 pt-16 pb-12 text-center sm:pt-20 sm:pb-14">
         <div className="mx-auto max-w-[720px]">
-          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-green-500">
+          <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             Private Catering
           </div>
           <h1 className="mb-5 font-heading text-[clamp(2rem,6vw,3.25rem)] font-extrabold leading-[1.1] tracking-tight text-gray-900">
