@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex">
+  <title>4D Supper Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #16a34a;
+      --green-dark: #128a3f;
+      --gold: #C5A55A;
+
+      --ink: #111827;        /* gray-900 */
+      --gray-800: #1f2937;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-400: #9ca3af;
+      --gray-300: #d1d5db;
+
+      --white: #ffffff;
+      --gray-50: #f9fafb;    /* light gray section */
+      --cream: #faf8f5;      /* closing section */
+      --line: #eceae5;
+
+      /* one shared horizontal rhythm for the entire page */
+      --pad: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #e9e4dc; color: var(--ink);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      display: flex; justify-content: center;
+    }
+    .phone {
+      width: 402px; max-width: 100%; height: 100vh; max-height: 100vh;
+      background: var(--white); position: relative; overflow: hidden;
+    }
+
+    /* ── Sliding views (native-app page transition) ─────────── */
+    .view {
+      position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: var(--white);
+      transition: transform 0.44s cubic-bezier(.32,.72,0,1), opacity 0.44s ease;
+    }
+    .view::-webkit-scrollbar { display: none; }
+    #home { transform: translateX(0); opacity: 1; }
+    #home.out { transform: translateX(-24%); opacity: 0.4; }
+    .detail {
+      transform: translateX(100%); opacity: 1; z-index: 10;
+      box-shadow: -10px 0 36px rgba(17,24,39,0.16);
+    }
+    .detail.in { transform: translateX(0); }
+
+    /* ════════ 1. HERO ════════ */
+    .hero {
+      position: relative; height: 38vh; min-height: 300px;
+      background: var(--ink); overflow: hidden;
+    }
+    .hero-media {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      animation: heroZoom 7s ease-out both;     /* settles like a video's last frame */
+    }
+    @keyframes heroZoom { from { transform: scale(1.07); } to { transform: scale(1); } }
+    /* gradient lives ONLY behind the text, for legibility — no badges, no pills */
+    .hero-scrim {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 62%;
+      background: linear-gradient(to top,
+        rgba(17,24,39,0.88) 0%,
+        rgba(17,24,39,0.45) 42%,
+        rgba(17,24,39,0) 100%);
+    }
+    .hero-text {
+      position: absolute; left: var(--pad); right: var(--pad); bottom: 26px;
+      color: #fff; opacity: 0; transform: translateY(12px);
+    }
+    .hero-text.show { animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text h1 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 29px;
+      line-height: 1.14; letter-spacing: -0.5px;
+    }
+    .hero-text h1 .gold { color: var(--gold); }
+    .hero-sub {
+      margin-top: 11px; font-size: 13.5px; font-weight: 400;
+      color: var(--gray-300); letter-spacing: 0.01em; opacity: 0;
+    }
+    .hero-sub.show { animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) 0.18s both; }
+
+    /* ════════ 2. STORY ════════ */
+    .story {
+      background: var(--white); text-align: center;
+      padding: 40px var(--pad);
+    }
+    .story p {
+      font-size: 17px; font-weight: 300; color: var(--gray-600);
+      line-height: 1.62; max-width: 340px; margin: 0 auto;
+    }
+
+    /* ════════ 3. SERVICE CARDS ════════ */
+    .cards-section { background: var(--white); padding-bottom: 8px; }
+    .cards {
+      display: flex; gap: 16px;
+      padding-left: var(--pad); padding-right: var(--pad);
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      scroll-padding-left: var(--pad);
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .cards::-webkit-scrollbar { display: none; }
+    .card {
+      /* fills most of the screen; ~20% of the next card peeks past the edge */
+      flex: 0 0 calc(100% - 64px); scroll-snap-align: start;
+      cursor: pointer;
+    }
+    .card-photo {
+      width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block;
+      border-radius: 16px;                 /* rounded on the IMAGE only */
+      transition: transform 0.18s ease;
+    }
+    .card:active .card-photo { transform: scale(0.98); }
+    .card-name {
+      margin-top: 14px; font-family: 'DM Sans';
+      font-weight: 600; font-size: 18px; letter-spacing: -0.2px; color: var(--ink);
+    }
+    .card-tag { margin-top: 3px; font-size: 14px; color: var(--gray-500); line-height: 1.4; }
+    .card-trust { margin-top: 6px; font-size: 13px; color: var(--gray-400); }
+
+    /* ════════ 4. TRUST ════════ */
+    .trust-band {
+      background: var(--gray-50); text-align: center;
+      padding: 40px var(--pad);
+    }
+    .trust-band .line {
+      font-size: 18px; font-weight: 500; color: var(--gray-800); letter-spacing: -0.2px;
+    }
+    .trust-band .sub { margin-top: 10px; font-size: 13px; color: var(--gray-400); }
+
+    /* ════════ 5. TESTIMONIAL ════════ */
+    .testimonial {
+      background: var(--white); text-align: center;
+      padding: 40px var(--pad) 44px;
+    }
+    .testimonial .mark {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 48px; line-height: 0.6;
+      color: rgba(197,165,90,0.30); height: 30px;
+    }
+    .testimonial blockquote {
+      margin: 18px auto 0; max-width: 320px;
+      font-size: 17px; font-style: italic; font-weight: 400;
+      color: var(--gray-700); line-height: 1.5;
+    }
+    .testimonial .who {
+      margin-top: 16px; font-size: 13px; font-weight: 500; color: var(--gray-400);
+    }
+
+    /* ════════ 6. CLOSING ════════ */
+    .closing {
+      background: var(--cream); text-align: center;
+      padding: 48px var(--pad);
+    }
+    .closing h2 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 24px;
+      letter-spacing: -0.4px; color: var(--ink);
+    }
+    .btn-member {
+      margin-top: 22px; display: block; width: 100%; height: 50px;
+      background: var(--green); color: #fff; border: none;
+      font-family: 'Inter'; font-weight: 600; font-size: 16px;
+      border-radius: 14px; cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+    .btn-member:active { transform: scale(0.985); background: var(--green-dark); }
+    .closing .contact { margin-top: 16px; font-size: 13px; color: var(--gray-400); }
+
+    /* ════════ DETAIL — shared chrome ════════ */
+    .detail-top {
+      display: flex; align-items: center; gap: 4px;
+      padding: 14px var(--pad); position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer; padding: 6px 8px 6px 0;
+      margin-left: -8px; min-height: 44px;
+    }
+    .back-btn .ar {
+      font-size: 19px; line-height: 1; color: var(--ink);
+      transition: transform 0.15s ease;
+    }
+    .back-btn:active .ar { transform: translateX(-3px); }
+    .back-btn .title {
+      font-family: 'DM Sans'; font-weight: 600; font-size: 17px;
+      letter-spacing: -0.2px; color: var(--ink);
+    }
+
+    .detail-intro { padding: 22px var(--pad) 0; }
+    .detail-intro p {
+      font-size: 15px; line-height: 1.55; color: var(--gray-600);
+    }
+    .detail-trust {
+      display: flex; flex-wrap: wrap; align-items: center;
+      margin-top: 16px; font-size: 13px; font-weight: 500; color: var(--green);
+    }
+    .detail-trust .dot { color: var(--gray-300); margin: 0 9px; font-weight: 400; }
+
+    .menu-head { padding: 24px var(--pad) 0; }
+    .menu-head h2 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px;
+    }
+    .menu-head .sub { color: var(--gray-500); font-size: 13.5px; margin-top: 3px; }
+
+    /* tightened dish grid — rows 1 & 2 visible without scroll on 402×874 */
+    .menu-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 14px var(--pad) 40px;
+    }
+    .dish {
+      background: var(--white); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .dish-img { width: 100%; height: 104px; object-fit: cover; display: block; }
+    .dish-body { padding: 9px 11px 10px; display: flex; flex-direction: column; flex: 1; }
+    .dish-name {
+      font-family: 'DM Sans'; font-weight: 600; font-size: 14.5px;
+      letter-spacing: -0.2px; line-height: 1.2; color: var(--ink);
+    }
+    .dish-desc {
+      font-size: 12px; color: var(--gray-500); line-height: 1.3; margin-top: 2px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 7px; }
+    .price { font-family: 'DM Sans'; font-weight: 700; font-size: 14.5px; }
+    .reserve {
+      border: none; background: var(--green); color: #fff;
+      font-family: 'Inter'; font-weight: 600; font-size: 12.5px;
+      padding: 7px 14px; border-radius: 999px; cursor: pointer;
+      transition: transform 0.1s ease, background 0.1s ease;
+    }
+    .reserve:active { transform: scale(0.94); background: var(--green-dark); }
+
+    /* placeholder detail (Catering / Private Chef) */
+    .placeholder {
+      padding: 0 var(--pad);
+    }
+    .placeholder-hero {
+      width: 100%; aspect-ratio: 16 / 11; object-fit: cover; display: block;
+      border-radius: 16px; margin-top: 4px;
+    }
+    .placeholder h1 {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 24px;
+      letter-spacing: -0.4px; margin-top: 20px;
+    }
+    .placeholder p {
+      font-size: 15px; line-height: 1.55; color: var(--gray-600); margin-top: 10px;
+    }
+    .placeholder .soon {
+      margin-top: 24px; display: inline-block;
+      font-size: 13px; font-weight: 500; color: var(--gold);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+
+    <!-- ════════════════ HOME ════════════════ -->
+    <div class="view" id="home">
+
+      <!-- 1. HERO -->
+      <section class="hero">
+        <img class="hero-media"
+             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80"
+             alt="Overhead plated dinner on a dark surface">
+        <div class="hero-scrim"></div>
+        <div class="hero-text" id="heroText">
+          <h1>Restaurant-Quality Dinners,<br><span class="gold">Delivered to Your Door</span></h1>
+          <div class="hero-sub" id="heroSub">by Chef Rich Dino · Riverview, FL</div>
+        </div>
+      </section>
+
+      <!-- 2. STORY -->
+      <section class="story">
+        <p>Seasonal, scratch-made meals prepared by a professional chef — delivered to your door every Sunday.</p>
+      </section>
+
+      <!-- 3. SERVICE CARDS -->
+      <section class="cards-section">
+        <div class="cards">
+          <div class="card" onclick="openDetail('weekly')">
+            <img class="card-photo" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=820&q=78" alt="Weekly meals">
+            <div class="card-name">Weekly Meals</div>
+            <div class="card-tag">Chef-prepared dinners, delivered every Sunday.</div>
+            <div class="card-trust">127 members this week</div>
+          </div>
+          <div class="card" onclick="openDetail('catering')">
+            <img class="card-photo" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=820&q=78" alt="Catering">
+            <div class="card-name">Catering</div>
+            <div class="card-tag">Full-service catering for parties and events.</div>
+            <div class="card-trust">Available for groups of 8–50</div>
+          </div>
+          <div class="card" onclick="openDetail('private')">
+            <img class="card-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=820&q=78" alt="Private chef events">
+            <div class="card-name">Private Chef Events</div>
+            <div class="card-tag">A multi-course experience, plated in your home.</div>
+            <div class="card-trust">Exclusive, by request only</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. TRUST -->
+      <section class="trust-band">
+        <div class="line">Trusted by 200+ families in Riverview</div>
+        <div class="sub">No commitments · Skip anytime · Free delivery</div>
+      </section>
+
+      <!-- 5. TESTIMONIAL -->
+      <section class="testimonial">
+        <div class="mark">&ldquo;</div>
+        <blockquote>The best decision we made was letting Chef Rich handle dinner. Our Sundays feel completely different now.</blockquote>
+        <div class="who">— Sarah M., Riverview</div>
+      </section>
+
+      <!-- 6. CLOSING -->
+      <section class="closing">
+        <h2>Ready to eat well?</h2>
+        <button class="btn-member">Become a Member</button>
+        <div class="contact">Questions? hello@4dsupperclub.com</div>
+      </section>
+    </div>
+
+    <!-- ════════════════ DETAIL: WEEKLY MEALS ════════════════ -->
+    <div class="view detail" id="detail-weekly">
+      <div class="detail-top">
+        <button class="back-btn" onclick="closeDetail('weekly')">
+          <span class="ar">←</span><span class="title">Weekly Meals</span>
+        </button>
+      </div>
+      <div class="detail-intro">
+        <p>Fresh, scratch-made dinners prepared by Chef Rich Dino, delivered to your door every Sunday. Choose from six seasonal dishes each week.</p>
+        <div class="detail-trust">
+          <span>No commitments</span><span class="dot">·</span>
+          <span>Skip anytime</span><span class="dot">·</span>
+          <span>Free delivery</span>
+        </div>
+      </div>
+      <div class="menu-head">
+        <h2>This Week&rsquo;s Menu</h2>
+        <div class="sub">Six seasonal dishes · reserve your favorites</div>
+      </div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- ════════════════ DETAIL: CATERING ════════════════ -->
+    <div class="view detail" id="detail-catering">
+      <div class="detail-top">
+        <button class="back-btn" onclick="closeDetail('catering')">
+          <span class="ar">←</span><span class="title">Catering</span>
+        </button>
+      </div>
+      <div class="placeholder">
+        <img class="placeholder-hero" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=820&q=78" alt="Catering spread">
+        <h1>Catering</h1>
+        <p>Full-service catering for parties and events, from intimate dinners to gatherings of fifty. Chef Rich brings the restaurant to you — menu planning, on-site preparation, and plating included.</p>
+        <span class="soon">Full menu coming soon</span>
+      </div>
+    </div>
+
+    <!-- ════════════════ DETAIL: PRIVATE CHEF ════════════════ -->
+    <div class="view detail" id="detail-private">
+      <div class="detail-top">
+        <button class="back-btn" onclick="closeDetail('private')">
+          <span class="ar">←</span><span class="title">Private Chef Events</span>
+        </button>
+      </div>
+      <div class="placeholder">
+        <img class="placeholder-hero" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=820&q=78" alt="Private chef event">
+        <h1>Private Chef Events</h1>
+        <p>An exclusive, multi-course dining experience prepared and plated in your home. Each menu is designed around your occasion and your guests — by request only.</p>
+        <span class="soon">By request only</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Hero headline fades in after the cinematic moment (1.2s) ──
+    setTimeout(function () {
+      document.getElementById('heroText').classList.add('show');
+      document.getElementById('heroSub').classList.add('show');
+    }, 1200);
+
+    // ── Weekly Meals dish grid ──
+    var DISHES = [
+      { name: 'Herb Roasted Chicken',  desc: 'Free-range, lemon & thyme',  price: 18, img: '1598103442097-8b74394b95c6' },
+      { name: 'Pan-Seared Salmon',     desc: 'Wild salmon, dill butter',   price: 22, img: '1467003909585-2f8a72700288' },
+      { name: 'Wild Mushroom Risotto', desc: 'Arborio, parmesan, truffle', price: 16, img: '1476124369491-e7addf5db371' },
+      { name: 'Harvest Grain Bowl',    desc: 'Farro, squash, tahini',      price: 14, img: '1512621776951-a57141f2eefd' },
+      { name: 'Braised Short Rib',     desc: 'Red wine, root vegetables',  price: 24, img: '1546964124-0cce460f38ef' },
+      { name: 'Seasonal Veg Curry',    desc: 'Coconut, chickpea, basmati', price: 15, img: '1455619452474-d2be8b1e70cd' }
+    ];
+    document.getElementById('menuGrid').innerHTML = DISHES.map(function (d) {
+      return '<div class="dish">' +
+        '<img class="dish-img" src="https://images.unsplash.com/photo-' + d.img + '?auto=format&fit=crop&w=360&q=70" alt="' + d.name + '">' +
+        '<div class="dish-body">' +
+          '<div class="dish-name">' + d.name + '</div>' +
+          '<div class="dish-desc">' + d.desc + '</div>' +
+          '<div class="dish-foot">' +
+            '<span class="price">$' + d.price + '</span>' +
+            '<button class="reserve">Reserve</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // ── Native-style page transitions ──
+    var home = document.getElementById('home');
+    function openDetail(key) {
+      var d = document.getElementById('detail-' + key);
+      home.classList.add('out');
+      d.scrollTop = 0;
+      d.classList.add('in');
+    }
+    function closeDetail(key) {
+      var d = document.getElementById('detail-' + key);
+      home.classList.remove('out');
+      d.classList.remove('in');
+    }
+  </script>
+</body>
+</html>
