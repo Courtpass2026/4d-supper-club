@@ -192,48 +192,51 @@
     }
     .back-btn:active { opacity: 0.6; }
 
-    .detail-intro { padding: 22px var(--pad) 0; }
+    .detail-intro { padding: 16px var(--pad) 0; }
     .detail-intro h1 {
-      font-family: 'DM Sans'; font-weight: 700; font-size: 28px; letter-spacing: -0.6px;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 26px; letter-spacing: -0.6px;
     }
     .detail-intro p {
-      font-size: 14.5px; line-height: 1.62; color: #374151; margin-top: 10px;
+      font-size: 14px; line-height: 1.5; color: #374151; margin-top: 8px;
     }
     .trust {
       display: flex; flex-wrap: wrap; gap: 6px 0; align-items: center;
-      margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--green);
+      margin-top: 12px; font-size: 12.5px; font-weight: 600; color: var(--green);
     }
     .trust span { display: inline-flex; align-items: center; }
-    .trust .dot { color: var(--gray-400); margin: 0 9px; font-weight: 400; }
+    .trust .dot { color: var(--gray-400); margin: 0 8px; font-weight: 400; }
 
-    .menu-head { padding: 26px var(--pad) 0; }
+    .menu-head { padding: 18px var(--pad) 0; }
     .menu-head h2 {
       font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px;
     }
     .menu-head .sub { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
 
     .menu-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-      padding: 16px var(--pad) 44px; align-items: stretch;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 14px var(--pad) 44px; align-items: stretch;
     }
     .dish {
       background: var(--card); border: 1px solid var(--line); border-radius: 14px;
       overflow: hidden; display: flex; flex-direction: column;
     }
-    .dish-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
-    .dish-body { padding: 11px 12px 13px; display: flex; flex-direction: column; flex: 1; }
+    .dish-img { width: 100%; height: 120px; object-fit: cover; display: block; }
+    .dish-body { padding: 10px 11px 11px; display: flex; flex-direction: column; flex: 1; }
     .dish-name {
-      font-family: 'DM Sans'; font-weight: 700; font-size: 16px; letter-spacing: -0.2px;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.2px;
       line-height: 1.25;
     }
-    .dish-desc { font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 4px; flex: 1; }
+    .dish-desc {
+      font-size: 12.5px; color: var(--muted); line-height: 1.35; margin-top: 3px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .dish-foot {
-      display: flex; align-items: center; justify-content: space-between; margin-top: 12px;
+      display: flex; align-items: center; justify-content: space-between; margin-top: 8px;
     }
     .price { font-family: 'DM Sans'; font-weight: 700; font-size: 15px; }
     .reserve {
-      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12.5px;
-      padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
+      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12px;
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
     }
     .reserve:active { transform: scale(0.93); background: var(--green-dark); }
 
