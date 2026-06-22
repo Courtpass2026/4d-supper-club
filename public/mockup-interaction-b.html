@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex">
+  <title>Interaction B — Bottom Sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #16a34a;
+      --gold: #C5A55A;
+      --ink: #111827;
+      --cream: #faf8f5;
+      --muted: #6b7280;
+      --line: #ece7df;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #e9e4dc; color: var(--ink); -webkit-font-smoothing: antialiased;
+      display: flex; justify-content: center;
+    }
+    .phone {
+      width: 402px; max-width: 100%; height: 100vh; max-height: 100vh;
+      background: var(--cream); position: relative; overflow: hidden;
+    }
+    .scroll { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    .topbar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 20px 14px; position: sticky; top: 0;
+      background: rgba(250,248,245,0.92); backdrop-filter: blur(10px);
+      z-index: 20; border-bottom: 1px solid var(--line);
+    }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 8px; background: var(--green);
+      display: grid; place-items: center; color: #fff;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.5px;
+    }
+    .logo-text { font-family: 'DM Sans'; font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
+    .logo-text .gold { color: var(--gold); }
+
+    .section-head { padding: 24px 20px 6px; }
+    .eyebrow {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 6px;
+    }
+    h2.section-title { font-family: 'DM Sans'; font-weight: 700; font-size: 26px; letter-spacing: -0.4px; }
+    .section-sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+    .rail {
+      display: flex; gap: 14px; padding: 18px 20px 8px; overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .rail::-webkit-scrollbar { display: none; }
+    .svc {
+      flex: 0 0 auto; width: 260px; scroll-snap-align: start; background: var(--card);
+      border-radius: 18px; border: 1px solid var(--line); overflow: hidden;
+      box-shadow: 0 6px 20px rgba(17,24,39,0.06); cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.2s ease;
+    }
+    .svc:active { transform: scale(0.975); }
+    .svc.tappable { border-color: var(--gold); }
+    .svc-photo { width: 100%; height: 150px; object-fit: cover; display: block; }
+    .svc-body { padding: 14px 16px 16px; }
+    .svc-name {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 18px; letter-spacing: -0.2px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .svc-tag { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 5px; }
+    .arrow {
+      width: 26px; height: 26px; border-radius: 50%; background: var(--green); color: #fff;
+      display: grid; place-items: center; flex: 0 0 auto; font-size: 14px;
+    }
+
+    .reviews { padding: 30px 20px 60px; }
+    .reviews h3 { font-family: 'DM Sans'; font-weight: 700; font-size: 20px; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .reviews .section-sub { margin-bottom: 16px; }
+    .review-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(17,24,39,0.04);
+    }
+    .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 8px; }
+    .review-text { font-size: 14px; line-height: 1.55; color: #374151; }
+    .review-who { margin-top: 10px; font-size: 13px; font-weight: 600; }
+    .review-who span { color: var(--muted); font-weight: 400; }
+
+    /* Overlay + sheet */
+    .overlay {
+      position: absolute; inset: 0; background: rgba(17,24,39,0); z-index: 40;
+      pointer-events: none; transition: background 0.32s ease;
+    }
+    .overlay.show { background: rgba(17,24,39,0.5); pointer-events: auto; }
+
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 85%; z-index: 50;
+      background: var(--cream); border-radius: 22px 22px 0 0;
+      transform: translateY(100%); transition: transform 0.34s cubic-bezier(.32,.72,0,1);
+      box-shadow: 0 -10px 40px rgba(17,24,39,0.25); display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .sheet.show { transform: translateY(0); }
+    .handle-wrap { padding: 10px 0 6px; display: grid; place-items: center; position: relative; }
+    .handle { width: 42px; height: 5px; border-radius: 999px; background: #d3ccc0; }
+    .sheet-close {
+      position: absolute; right: 16px; top: 12px; width: 30px; height: 30px; border-radius: 50%;
+      background: #f1ede6; border: none; color: var(--ink); font-size: 17px; cursor: pointer;
+      display: grid; place-items: center; line-height: 1;
+    }
+    .sheet-head { padding: 4px 20px 14px; border-bottom: 1px solid var(--line); }
+    .sheet-title { font-family: 'DM Sans'; font-weight: 700; font-size: 22px; letter-spacing: -0.3px; }
+    .sheet-pill {
+      display: inline-block; font-size: 11px; font-weight: 600; color: var(--green);
+      background: rgba(22,163,74,0.1); padding: 3px 9px; border-radius: 999px; margin-bottom: 8px;
+    }
+    .sheet-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
+    .blurb { font-size: 14px; line-height: 1.6; color: #374151; padding: 16px 20px 6px; }
+
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px 20px 30px; }
+    .dish {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .dish img { width: 100%; height: 104px; object-fit: cover; display: block; }
+    .dish-body { padding: 10px 11px 12px; display: flex; flex-direction: column; flex: 1; }
+    .dish-name { font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.2px; }
+    .dish-desc { font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 3px; flex: 1; }
+    .dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .price { font-family: 'DM Sans'; font-weight: 700; font-size: 14px; }
+    .reserve {
+      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12px;
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
+    }
+    .reserve:active { transform: scale(0.94); }
+
+    .label-pill {
+      position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; font-size: 11px; font-weight: 600;
+      padding: 5px 12px; border-radius: 999px; z-index: 100; letter-spacing: 0.04em; opacity: 0.82;
+    }
+  </style>
+</head>
+<body>
+  <div class="label-pill">B · Bottom Sheet</div>
+  <div class="phone">
+    <div class="scroll">
+      <div class="topbar">
+        <div class="logo-mark">4D</div>
+        <div class="logo-text">4D <span class="gold">Supper Club</span></div>
+      </div>
+
+      <div class="section-head">
+        <div class="eyebrow">What we offer</div>
+        <h2 class="section-title">Our Services</h2>
+        <div class="section-sub">Swipe to explore · tap a card for details</div>
+      </div>
+
+      <div class="rail">
+        <div class="svc tappable" onclick="openSheet()">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=620&q=70" alt="Weekly meals">
+          <div class="svc-body">
+            <div class="svc-name">Weekly Meals <span class="arrow">↑</span></div>
+            <div class="svc-tag">Chef-prepared meals delivered every Sunday</div>
+          </div>
+        </div>
+        <div class="svc">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=620&q=70" alt="Catering">
+          <div class="svc-body">
+            <div class="svc-name">Catering</div>
+            <div class="svc-tag">Full-service catering for your events</div>
+          </div>
+        </div>
+        <div class="svc">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=620&q=70" alt="Private chef events">
+          <div class="svc-body">
+            <div class="svc-name">Private Chef Events</div>
+            <div class="svc-tag">An exclusive dining experience at your home</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews">
+        <h3>What Our Members Say</h3>
+        <div class="section-sub">Real words from the supper club table</div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Sunday delivery has changed our week. Restaurant-quality food, zero effort, and the menu never gets old.”</div>
+          <div class="review-who">Maria L. <span>· Member since 2024</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Chef Rich catered our anniversary dinner and our guests are still talking about it.”</div>
+          <div class="review-who">Devon & Amir <span>· Private event</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay + bottom sheet -->
+    <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet">
+      <div class="handle-wrap" onclick="closeSheet()">
+        <div class="handle"></div>
+        <button class="sheet-close" onclick="event.stopPropagation();closeSheet()">✕</button>
+      </div>
+      <div class="sheet-head">
+        <div class="sheet-pill">Weekly Meals</div>
+        <div class="sheet-title">This Week’s Menu</div>
+      </div>
+      <div class="sheet-scroll">
+        <div class="blurb">Fresh, scratch-made meals prepared by Chef Rich Dino, delivered to your door every Sunday. Choose from 6 seasonal dishes each week — no commitments, skip or cancel anytime.</div>
+        <div class="menu-grid" id="menu-b"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DISHES = [
+      { name: 'Herb Roasted Chicken', desc: 'Free-range, lemon & thyme', price: 18, img: '1598103442097-8b74394b95c6' },
+      { name: 'Pan-Seared Salmon', desc: 'Wild salmon, dill butter', price: 22, img: '1467003909585-2f8a72700288' },
+      { name: 'Wild Mushroom Risotto', desc: 'Arborio, parmesan, truffle', price: 16, img: '1476124369491-e7addf5db371' },
+      { name: 'Harvest Grain Bowl', desc: 'Farro, squash, tahini', price: 14, img: '1512621776951-a57141f2eefd' },
+      { name: 'Braised Short Rib', desc: 'Red wine, root vegetables', price: 24, img: '1546964124-0cce460f38ef' },
+      { name: 'Seasonal Veg Curry', desc: 'Coconut, chickpea, basmati', price: 15, img: '1455619452474-d2be8b1e70cd' },
+    ];
+    document.getElementById('menu-b').innerHTML = DISHES.map(d => `
+      <div class="dish">
+        <img src="https://images.unsplash.com/photo-${d.img}?auto=format&fit=crop&w=320&q=65" alt="${d.name}">
+        <div class="dish-body">
+          <div class="dish-name">${d.name}</div>
+          <div class="dish-desc">${d.desc}</div>
+          <div class="dish-foot">
+            <span class="price">$${d.price}</span>
+            <button class="reserve">Reserve</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    function openSheet() {
+      document.getElementById('overlay').classList.add('show');
+      document.getElementById('sheet').classList.add('show');
+    }
+    function closeSheet() {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('sheet').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

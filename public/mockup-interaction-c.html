@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex">
+  <title>Interaction C — Full Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #16a34a;
+      --gold: #C5A55A;
+      --ink: #111827;
+      --cream: #faf8f5;
+      --muted: #6b7280;
+      --line: #ece7df;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #e9e4dc; color: var(--ink); -webkit-font-smoothing: antialiased;
+      display: flex; justify-content: center;
+    }
+    .phone {
+      width: 402px; max-width: 100%; height: 100vh; max-height: 100vh;
+      background: var(--cream); position: relative; overflow: hidden;
+    }
+
+    /* Views slide horizontally */
+    .view {
+      position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: var(--cream);
+      transition: transform 0.38s cubic-bezier(.4,0,.2,1), opacity 0.38s ease;
+    }
+    #list { transform: translateX(0); opacity: 1; }
+    #list.out { transform: translateX(-22%); opacity: 0.4; }
+    #detail { transform: translateX(100%); opacity: 1; z-index: 10; box-shadow: -8px 0 30px rgba(17,24,39,0.12); }
+    #detail.in { transform: translateX(0); }
+
+    .topbar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 20px 14px; position: sticky; top: 0;
+      background: rgba(250,248,245,0.92); backdrop-filter: blur(10px);
+      z-index: 20; border-bottom: 1px solid var(--line);
+    }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 8px; background: var(--green);
+      display: grid; place-items: center; color: #fff;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.5px;
+    }
+    .logo-text { font-family: 'DM Sans'; font-weight: 700; font-size: 17px; letter-spacing: -0.2px; }
+    .logo-text .gold { color: var(--gold); }
+
+    .section-head { padding: 24px 20px 6px; }
+    .eyebrow {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 6px;
+    }
+    h2.section-title { font-family: 'DM Sans'; font-weight: 700; font-size: 26px; letter-spacing: -0.4px; }
+    .section-sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+    .rail {
+      display: flex; gap: 14px; padding: 18px 20px 8px; overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .rail::-webkit-scrollbar { display: none; }
+    .svc {
+      flex: 0 0 auto; width: 260px; scroll-snap-align: start; background: var(--card);
+      border-radius: 18px; border: 1px solid var(--line); overflow: hidden;
+      box-shadow: 0 6px 20px rgba(17,24,39,0.06); cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .svc:active { transform: scale(0.975); }
+    .svc.tappable { border-color: var(--gold); }
+    .svc-photo { width: 100%; height: 150px; object-fit: cover; display: block; }
+    .svc-body { padding: 14px 16px 16px; }
+    .svc-name {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 18px; letter-spacing: -0.2px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .svc-tag { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 5px; }
+    .arrow {
+      width: 26px; height: 26px; border-radius: 50%; background: var(--green); color: #fff;
+      display: grid; place-items: center; flex: 0 0 auto; font-size: 14px;
+    }
+
+    .reviews { padding: 30px 20px 60px; }
+    .reviews h3 { font-family: 'DM Sans'; font-weight: 700; font-size: 20px; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .reviews .section-sub { margin-bottom: 16px; }
+    .review-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(17,24,39,0.04);
+    }
+    .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 8px; }
+    .review-text { font-size: 14px; line-height: 1.55; color: #374151; }
+    .review-who { margin-top: 10px; font-size: 13px; font-weight: 600; }
+    .review-who span { color: var(--muted); font-weight: 400; }
+
+    /* Detail page */
+    .detail-hero { position: relative; height: 230px; }
+    .detail-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .detail-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(17,24,39,0.72), rgba(17,24,39,0.05) 55%);
+    }
+    .back-btn {
+      position: absolute; top: 16px; left: 14px; z-index: 5;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(6px);
+      border: none; border-radius: 999px; padding: 9px 15px 9px 12px;
+      font-family: 'Inter'; font-weight: 600; font-size: 13px; color: var(--ink); cursor: pointer;
+      box-shadow: 0 3px 12px rgba(17,24,39,0.18);
+    }
+    .back-btn:active { transform: scale(0.96); }
+    .hero-caption {
+      position: absolute; left: 20px; bottom: 16px; z-index: 5; color: #fff;
+    }
+    .hero-caption .eyebrow { color: var(--gold); }
+    .hero-caption h1 { font-family: 'DM Sans'; font-weight: 700; font-size: 28px; letter-spacing: -0.5px; }
+
+    .blurb { font-size: 14.5px; line-height: 1.62; color: #374151; padding: 20px 20px 4px; }
+
+    .menu-head { padding: 18px 20px 0; }
+    .menu-head h3 { font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px; }
+    .menu-head .section-sub { margin-top: 2px; }
+
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 20px 44px; }
+    .dish {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .dish img { width: 100%; height: 104px; object-fit: cover; display: block; }
+    .dish-body { padding: 10px 11px 12px; display: flex; flex-direction: column; flex: 1; }
+    .dish-name { font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.2px; }
+    .dish-desc { font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 3px; flex: 1; }
+    .dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .price { font-family: 'DM Sans'; font-weight: 700; font-size: 14px; }
+    .reserve {
+      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12px;
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
+    }
+    .reserve:active { transform: scale(0.94); }
+
+    .label-pill {
+      position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; font-size: 11px; font-weight: 600;
+      padding: 5px 12px; border-radius: 999px; z-index: 100; letter-spacing: 0.04em; opacity: 0.82;
+    }
+  </style>
+</head>
+<body>
+  <div class="label-pill">C · Full Page</div>
+  <div class="phone">
+
+    <!-- LIST VIEW -->
+    <div class="view" id="list">
+      <div class="topbar">
+        <div class="logo-mark">4D</div>
+        <div class="logo-text">4D <span class="gold">Supper Club</span></div>
+      </div>
+
+      <div class="section-head">
+        <div class="eyebrow">What we offer</div>
+        <h2 class="section-title">Our Services</h2>
+        <div class="section-sub">Swipe to explore · tap a card for details</div>
+      </div>
+
+      <div class="rail">
+        <div class="svc tappable" onclick="openDetail()">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=620&q=70" alt="Weekly meals">
+          <div class="svc-body">
+            <div class="svc-name">Weekly Meals <span class="arrow">→</span></div>
+            <div class="svc-tag">Chef-prepared meals delivered every Sunday</div>
+          </div>
+        </div>
+        <div class="svc">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=620&q=70" alt="Catering">
+          <div class="svc-body">
+            <div class="svc-name">Catering</div>
+            <div class="svc-tag">Full-service catering for your events</div>
+          </div>
+        </div>
+        <div class="svc">
+          <img class="svc-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=620&q=70" alt="Private chef events">
+          <div class="svc-body">
+            <div class="svc-name">Private Chef Events</div>
+            <div class="svc-tag">An exclusive dining experience at your home</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews">
+        <h3>What Our Members Say</h3>
+        <div class="section-sub">Real words from the supper club table</div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Sunday delivery has changed our week. Restaurant-quality food, zero effort, and the menu never gets old.”</div>
+          <div class="review-who">Maria L. <span>· Member since 2024</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <div class="review-text">“Chef Rich catered our anniversary dinner and our guests are still talking about it.”</div>
+          <div class="review-who">Devon & Amir <span>· Private event</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div class="view" id="detail">
+      <div class="detail-hero">
+        <button class="back-btn" onclick="closeDetail()">← Back to Services</button>
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=820&q=72" alt="Weekly meals hero">
+        <div class="hero-caption">
+          <div class="eyebrow">Weekly Meals</div>
+          <h1>Every Sunday</h1>
+        </div>
+      </div>
+      <div class="blurb">Fresh, scratch-made meals prepared by Chef Rich Dino, delivered to your door every Sunday. Choose from 6 seasonal dishes each week — no commitments, skip or cancel anytime.</div>
+      <div class="menu-head">
+        <h3>This Week’s Menu</h3>
+        <div class="section-sub">6 seasonal dishes · reserve your favorites</div>
+      </div>
+      <div class="menu-grid" id="menu-c"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const DISHES = [
+      { name: 'Herb Roasted Chicken', desc: 'Free-range, lemon & thyme', price: 18, img: '1598103442097-8b74394b95c6' },
+      { name: 'Pan-Seared Salmon', desc: 'Wild salmon, dill butter', price: 22, img: '1467003909585-2f8a72700288' },
+      { name: 'Wild Mushroom Risotto', desc: 'Arborio, parmesan, truffle', price: 16, img: '1476124369491-e7addf5db371' },
+      { name: 'Harvest Grain Bowl', desc: 'Farro, squash, tahini', price: 14, img: '1512621776951-a57141f2eefd' },
+      { name: 'Braised Short Rib', desc: 'Red wine, root vegetables', price: 24, img: '1546964124-0cce460f38ef' },
+      { name: 'Seasonal Veg Curry', desc: 'Coconut, chickpea, basmati', price: 15, img: '1455619452474-d2be8b1e70cd' },
+    ];
+    document.getElementById('menu-c').innerHTML = DISHES.map(d => `
+      <div class="dish">
+        <img src="https://images.unsplash.com/photo-${d.img}?auto=format&fit=crop&w=320&q=65" alt="${d.name}">
+        <div class="dish-body">
+          <div class="dish-name">${d.name}</div>
+          <div class="dish-desc">${d.desc}</div>
+          <div class="dish-foot">
+            <span class="price">$${d.price}</span>
+            <button class="reserve">Reserve</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    const list = document.getElementById('list');
+    const detail = document.getElementById('detail');
+    function openDetail() {
+      list.classList.add('out');
+      detail.classList.add('in');
+      detail.scrollTop = 0;
+    }
+    function closeDetail() {
+      list.classList.remove('out');
+      detail.classList.remove('in');
+    }
+  </script>
+</body>
+</html>

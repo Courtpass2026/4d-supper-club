@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Service Card Interaction Mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #16a34a;
+      --gold: #C5A55A;
+      --ink: #111827;
+      --cream: #faf8f5;
+      --muted: #6b7280;
+      --line: #ece7df;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--ink); min-height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 36px 20px; -webkit-font-smoothing: antialiased;
+    }
+    .wrap { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; }
+    header { text-align: center; margin-bottom: 10px; }
+    .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
+    .logo-mark {
+      width: 34px; height: 34px; border-radius: 9px; background: var(--green);
+      display: grid; place-items: center; color: #fff;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 16px; letter-spacing: -0.5px;
+    }
+    .logo-text { font-family: 'DM Sans'; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; }
+    .logo-text .gold { color: var(--gold); }
+    h1 { font-family: 'DM Sans'; font-size: 27px; font-weight: 700; letter-spacing: -0.4px; }
+    .sub { color: var(--muted); font-size: 15px; margin-top: 7px; line-height: 1.5; }
+    a.btn {
+      display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink);
+      background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      padding: 20px 22px; box-shadow: 0 5px 18px rgba(17,24,39,0.05);
+      transition: transform 0.1s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    a.btn:active { transform: scale(0.985); border-color: var(--gold); box-shadow: 0 8px 24px rgba(17,24,39,0.1); }
+    .badge {
+      width: 46px; height: 46px; border-radius: 12px; flex: 0 0 auto;
+      display: grid; place-items: center; color: #fff;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 20px;
+    }
+    .badge.a { background: var(--green); }
+    .badge.b { background: var(--gold); }
+    .badge.c { background: var(--ink); }
+    .btn-text { display: flex; flex-direction: column; }
+    .label { font-family: 'DM Sans'; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; }
+    .hint { color: var(--muted); font-size: 13.5px; margin-top: 3px; line-height: 1.4; }
+    .arrow { margin-left: auto; color: var(--gold); font-size: 20px; }
+    footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo-row">
+        <div class="logo-mark">4D</div>
+        <div class="logo-text">4D <span class="gold">Supper Club</span></div>
+      </div>
+      <h1>Service Card Interactions</h1>
+      <p class="sub">Same content, three ways to open “Weekly Meals.”<br>Tap a card in each to feel the difference.</p>
+    </header>
+
+    <a class="btn" href="/mockup-interaction-a.html">
+      <div class="badge a">A</div>
+      <div class="btn-text">
+        <span class="label">Accordion</span>
+        <span class="hint">Card expands in place; page pushes down</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="btn" href="/mockup-interaction-b.html">
+      <div class="badge b">B</div>
+      <div class="btn-text">
+        <span class="label">Bottom Sheet</span>
+        <span class="hint">Sheet slides up over a dimmed page</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="btn" href="/mockup-interaction-c.html">
+      <div class="badge c">C</div>
+      <div class="btn-text">
+        <span class="label">Full Page</span>
+        <span class="hint">Slides to a detail page with a hero image</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <footer>4D Supper Club · interaction review · Jun 2026</footer>
+  </div>
+</body>
+</html>
