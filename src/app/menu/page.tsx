@@ -68,7 +68,7 @@ export default async function MenuPage() {
             </Link>
             <a
               href="mailto:chef@4dsupperclub.com?subject=When%20is%20this%20week%27s%20menu%20live%3F"
-              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
             >
               Email Chef Rich
             </a>
@@ -131,7 +131,7 @@ export default async function MenuPage() {
           </p>
           <Link
             href="/order"
-            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-white transition-colors hover:bg-green-400"
+            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-gray-900 transition-colors hover:bg-green-400"
           >
             Order Now
           </Link>

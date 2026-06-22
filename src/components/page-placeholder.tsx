@@ -31,7 +31,7 @@ export default function PagePlaceholder({ eyebrow, title, description }: Props) 
           </Link>
           <a
             href="mailto:chef@4dsupperclub.com?subject=I%27d%20like%20to%20join%204D%20Supper%20Club"
-            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
           >
             Email Chef Rich
           </a>

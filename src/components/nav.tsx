@@ -67,7 +67,7 @@ export default function Nav() {
           <li>
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-lg bg-green-500 px-[22px] py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+              className="inline-flex items-center justify-center rounded-lg bg-green-500 px-[22px] py-2.5 text-sm font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
             >
               Order Now
             </Link>
@@ -78,7 +78,7 @@ export default function Nav() {
         <button
           type="button"
           className="flex w-6 flex-col gap-[5px] py-1 md:hidden"
-          aria-label="Toggle navigation menu"
+          aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((v) => !v)}
@@ -127,7 +127,7 @@ export default function Nav() {
           <li>
             <Link
               href="/order"
-              className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-green-500 px-[22px] py-3 text-base font-semibold text-white"
+              className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-green-500 px-[22px] py-3 text-base font-semibold text-gray-900"
               onClick={() => setOpen(false)}
             >
               Order Now

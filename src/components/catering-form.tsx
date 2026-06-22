@@ -303,7 +303,7 @@ export default function CateringForm() {
 
       <button
         type="submit"
-        className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-8 py-4 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:w-auto"
+        className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-8 py-4 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:w-auto"
       >
         Submit Request
       </button>

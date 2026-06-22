@@ -13,7 +13,7 @@ export default function Cta() {
         </p>
         <Link
           href="/order"
-          className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-white transition-colors hover:bg-green-400"
+          className="inline-flex items-center justify-center rounded-xl bg-green-500 px-10 py-4 text-[1.05rem] font-semibold text-gray-900 transition-colors hover:bg-green-400"
         >
           Get Started Today
         </Link>

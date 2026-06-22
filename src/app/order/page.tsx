@@ -29,7 +29,7 @@ export default async function OrderPage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+            className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
           >
             Back to Home
           </Link>

@@ -94,7 +94,7 @@ export default function OrderClient({ dishes }: { dishes: Dish[] }) {
             <button
               type="button"
               onClick={() => setCheckoutOpen(true)}
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-green-500 px-6 py-3 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:px-8"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-green-500 px-6 py-3 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md sm:px-8"
             >
               Checkout
             </button>
@@ -183,7 +183,7 @@ function OrderCard({
             <button
               type="button"
               onClick={onAdd}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-5 py-3 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-5 py-3 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
             >
               Add to Order
             </button>
@@ -317,7 +317,7 @@ function CheckoutSheet({
             <button
               type="button"
               onClick={onPlaced}
-              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
             >
               Done
             </button>
@@ -460,7 +460,7 @@ function CheckoutSheet({
               <button
                 type="submit"
                 form="checkout-form"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-6 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-green-500 px-6 py-3.5 text-base font-semibold text-gray-900 transition-all hover:-translate-y-px hover:bg-green-600 hover:shadow-md"
               >
                 Place Order
               </button>
