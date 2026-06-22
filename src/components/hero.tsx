@@ -11,15 +11,35 @@ const trust = [
 export default function Hero() {
   return (
     <section id="hero" className="bg-white">
-      {/* ---------- The HERO: a full-bleed, edge-to-edge food photo ---------- */}
+      {/* ---------- The HERO: a dish that's plated right in front of you ----------
+          Two stacked, full-bleed overhead photos. The empty place setting is
+          always there; the finished dish "drops" onto the plate once on load
+          (see .food-drop in globals.css). */}
       <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden sm:h-[52vh] lg:h-[66vh] lg:max-h-[680px]">
+        {/* Base layer: the empty place setting, always visible. */}
         <Image
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=1200&fit=crop&q=80"
-          alt="A spread of freshly plated, scratch-made dinners from Chef Rich Dino"
+          src="https://images.unsplash.com/photo-1517870662726-c1d98ee36250?w=1600&h=1200&fit=crop&q=80"
+          alt="An elegant empty place setting on a dark wooden table, awaiting this week's dinner"
           fill
           priority
           sizes="100vw"
           className="object-cover"
+        />
+
+        {/* Top layer: the plated dish that lands on the setting. */}
+        <Image
+          src="https://images.unsplash.com/photo-1762631383362-bad467f94a8d?w=1600&h=1200&fit=crop&q=80"
+          alt="A spread of freshly plated, scratch-made dinners from Chef Rich Dino"
+          fill
+          priority
+          sizes="100vw"
+          className="food-drop object-cover"
+        />
+
+        {/* Soft contact shadow that deepens as the dish settles, for depth. */}
+        <div
+          aria-hidden="true"
+          className="food-drop-shadow pointer-events-none absolute inset-0 shadow-[inset_0_0_120px_rgba(0,0,0,0.35)]"
         />
 
         {/* Soft top scrim so the status pill stays legible over any image. */}
