@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Hero Mockups</title>
+  <style>
+    :root {
+      --bg: #0f1311;
+      --card: #1a201d;
+      --border: #2c352f;
+      --text: #f4f1ea;
+      --muted: #9aa39c;
+      --accent: #3f7d52;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 26px;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 6px;
+    }
+    a.btn {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 24px;
+      font-size: 19px;
+      font-weight: 600;
+      transition: transform 0.08s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    a.btn:active {
+      transform: scale(0.98);
+      background: #222a26;
+      border-color: var(--accent);
+    }
+    a.btn .label { display: block; }
+    a.btn .hint {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Hero Mockups</h1>
+      <p class="sub">Tap to preview each option</p>
+    </header>
+    <a class="btn" href="/mockup-a-fullbleed.html">
+      <span class="label">A — Full-Bleed</span>
+      <span class="hint">Edge-to-edge hero image</span>
+    </a>
+    <a class="btn" href="/mockup-b-split.html">
+      <span class="label">B — Split Layout</span>
+      <span class="hint">Side-by-side text and image</span>
+    </a>
+    <a class="btn" href="/mockup-c-dark.html">
+      <span class="label">C — Dark Hero</span>
+      <span class="hint">Moody dark-themed hero</span>
+    </a>
+    <footer>4d Supper Club · design review</footer>
+  </div>
+</body>
+</html>
