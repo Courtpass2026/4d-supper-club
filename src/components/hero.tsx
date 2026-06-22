@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import WeeklyStatus, { WeeklyTimeline } from "@/components/weekly-status";
+import WeeklyStatus from "@/components/weekly-status";
 
 const trust = [
   "No commitments",
@@ -12,7 +12,7 @@ export default function Hero() {
   return (
     <section id="hero" className="bg-white">
       {/* ---------- The HERO: a full-bleed, edge-to-edge food photo ---------- */}
-      <div className="relative h-[58vh] min-h-[360px] w-full overflow-hidden sm:h-[60vh] lg:h-[66vh] lg:max-h-[680px]">
+      <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden sm:h-[52vh] lg:h-[66vh] lg:max-h-[680px]">
         <Image
           src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=1200&fit=crop&q=80"
           alt="A spread of freshly plated, scratch-made dinners from Chef Rich Dino"
@@ -37,10 +37,7 @@ export default function Hero() {
       {/* ---------- Conversion content, below the photo, on clean light bg ---------- */}
       <div className="px-6 pb-24 pt-9 text-center">
         <div className="mx-auto max-w-[720px]">
-          {/* Weekly ritual timeline bridges the image and the message. */}
-          <WeeklyTimeline />
-
-          <h1 className="mb-5 mt-10 font-heading text-[clamp(2.2rem,8vw,3.5rem)] font-extrabold leading-[1.1] tracking-tight text-gray-900">
+          <h1 className="mb-5 font-heading text-[clamp(2.2rem,8vw,3.5rem)] font-extrabold leading-[1.1] tracking-tight text-gray-900">
             Restaurant-Quality Dinners,{" "}
             <span className="text-gold-600">Delivered to Your Door</span>
           </h1>

@@ -8,12 +8,10 @@ import { useEffect, useState } from "react";
  * supper-club ritual based on the member's local day of week.
  *
  * In the full-bleed hero the food photo is the star, so this is intentionally
- * compact: a small status pill (`WeeklyStatus`) that floats over the image, and
- * a quiet 7-dot ritual timeline (`WeeklyTimeline`) that sits below it on the
- * light content band. Both resolve the day client-side — the page is statically
- * prerendered, so a server-computed day would be frozen at build time. To avoid
- * a hydration mismatch we render a stable default until mounted, then swap to
- * the real day.
+ * compact: a small status pill (`WeeklyStatus`) that floats over the image. It
+ * resolves the day client-side — the page is statically prerendered, so a
+ * server-computed day would be frozen at build time. To avoid a hydration
+ * mismatch we render a stable default until mounted, then swap to the real day.
  */
 
 type Phase = {
@@ -35,18 +33,6 @@ const PHASES: Record<number, Phase> = {
 
 /** Stable default for SSR / first paint (matches Monday's release energy). */
 const DEFAULT_PHASE: Phase = PHASES[1];
-
-const RITUAL = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-/** Map JS getDay() (0=Sun) to the Mon-first ritual index. */
-const RITUAL_INDEX: Record<number, number> = {
-  1: 0,
-  2: 1,
-  3: 2,
-  4: 3,
-  5: 4,
-  6: 5,
-  0: 6,
-};
 
 /** Resolve the member's local day of week after mount (null during SSR). */
 function useLocalDay() {
@@ -82,46 +68,5 @@ export default function WeeklyStatus() {
       />
       {phase.eyebrow}
     </div>
-  );
-}
-
-/**
- * Quiet 7-dot ritual timeline for the light content band below the photo.
- * Orients the member in the weekly cycle without competing with the hero.
- */
-export function WeeklyTimeline() {
-  const day = useLocalDay();
-  const activeRitual = day === null ? 0 : (RITUAL_INDEX[day] ?? 0);
-
-  return (
-    <ol
-      className="mx-auto flex max-w-[420px] items-center justify-between"
-      aria-hidden="true"
-    >
-      {RITUAL.map((label, i) => {
-        const isActive = i === activeRitual;
-        const isPast = i < activeRitual;
-        return (
-          <li key={label} className="flex flex-1 flex-col items-center gap-2">
-            <span
-              className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
-                isActive
-                  ? "h-2 w-2 bg-gray-900 ring-4 ring-gray-900/10"
-                  : isPast
-                    ? "bg-gray-400"
-                    : "bg-gray-200"
-              }`}
-            />
-            <span
-              className={`text-[0.62rem] font-semibold uppercase tracking-wider transition-colors duration-300 ${
-                isActive ? "text-gray-900" : "text-gray-400"
-              }`}
-            >
-              {label}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
   );
 }
