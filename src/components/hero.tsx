@@ -11,15 +11,17 @@ export default function Hero() {
   return (
     <section id="hero" className="bg-white">
       {/* ---------- The HERO: this week's dinner, in motion ----------
-          A single full-bleed looping video of the food. It autoplays muted
-          (required for iOS), loops, and shows the food photo as a poster
-          while it loads. */}
+          A single full-bleed video of the food. It autoplays muted
+          (required for iOS), plays once and rests on the final frame, and
+          shows the food photo as a poster while it loads. A slight scale
+          zoom tightens the framing so you feel right at the table; the
+          container clips the scaled-up edges. */}
       <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden sm:h-[52vh] lg:h-[66vh] lg:max-h-[680px]">
         <video
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ transform: "scale(1.3)" }}
           autoPlay
           muted
-          loop
           playsInline
           poster="https://images.unsplash.com/photo-1762631383362-bad467f94a8d?w=1600&h=1200&fit=crop&q=80"
           aria-label="A spread of freshly plated, scratch-made dinners from Chef Rich Dino"
