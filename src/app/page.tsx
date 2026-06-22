@@ -1,4 +1,3 @@
-import WeeklyStatus from "@/components/weekly-status";
 import Hero from "@/components/hero";
 import HowItWorks from "@/components/how-it-works";
 import Programs from "@/components/programs";
@@ -11,7 +10,6 @@ import Reveal from "@/components/reveal";
 export default function Home() {
   return (
     <main>
-      <WeeklyStatus />
       <Hero />
       <Reveal>
         <HowItWorks />
