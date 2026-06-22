@@ -17,6 +17,7 @@
       --cream: #faf8f5;
       --muted: #6b7280;
       --gray-400: #9ca3af;
+      --gray-300: #d1d5db;
       --line: #ece7df;
       --card: #ffffff;
 
@@ -51,7 +52,7 @@
 
     /* ── 1. VIDEO HERO ─────────────────────────────── */
     .hero {
-      position: relative; height: 50vh; min-height: 360px;
+      position: relative; height: 40vh; min-height: 320px;
       background: var(--ink); overflow: hidden;
     }
     .hero-media {
@@ -86,7 +87,7 @@
     .hero-text h1 .gold { color: var(--gold); }
     .hero-sub {
       margin-top: 12px; font-size: 13.5px; font-weight: 500;
-      color: var(--gray-400); letter-spacing: 0.01em;
+      color: var(--gray-300); letter-spacing: 0.01em;
       opacity: 0;
     }
     .hero-sub.show { animation: heroIn 0.8s ease 0.32s both; }
@@ -106,15 +107,15 @@
     /* ── 2. SERVICE CARDS — FULL-FOCUS SWIPE CAROUSEL ── */
     .carousel-wrap { padding-top: 24px; }
     .carousel {
-      display: flex; gap: 0;
+      display: flex; gap: 14px;
       padding: 0 var(--pad); overflow-x: auto;
       scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      scroll-padding-left: var(--pad);
     }
     .carousel::-webkit-scrollbar { display: none; }
     .big-card {
-      flex: 0 0 100%; scroll-snap-align: center;
-      /* each card holds the same inner width as page content */
-      padding-right: 0;
+      /* narrower than the viewport so the next card is clearly cut off at the edge (~45px peek) */
+      flex: 0 0 calc(100% - 78px); scroll-snap-align: start;
     }
     .big-card-inner {
       background: var(--card); border-radius: 22px; border: 1px solid var(--line);
@@ -132,13 +133,14 @@
       color: var(--muted); font-size: 14.5px; line-height: 1.5; margin-top: 8px;
     }
     .big-btn {
+      /* ghost/outlined — browse action, visually distinct from the solid-green Reserve (buy) buttons */
       margin-top: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-      width: 100%; background: var(--green); color: #fff; border: none;
+      width: 100%; background: transparent; color: var(--gold); border: 1.5px solid var(--gold);
       font-family: 'DM Sans'; font-weight: 700; font-size: 15px; letter-spacing: -0.1px;
-      padding: 13px 0; border-radius: 999px; cursor: pointer;
-      box-shadow: 0 8px 18px rgba(22,163,74,0.30); transition: transform 0.12s ease;
+      padding: 12px 0; border-radius: 999px; cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
     }
-    .big-btn:active { transform: scale(0.97); }
+    .big-btn:active { transform: scale(0.97); background: rgba(197,165,90,0.10); }
     .big-btn .ar { transition: transform 0.15s ease; }
     .big-card-inner:active .big-btn .ar { transform: translateX(3px); }
 
@@ -148,33 +150,61 @@
       padding: 16px var(--pad) 0;
     }
     .dot-i {
-      width: 8px; height: 8px; border-radius: 999px; background: #d8d1c6;
+      width: 9px; height: 9px; border-radius: 999px; background: #d8d1c6;
       transition: width 0.25s ease, background 0.25s ease;
     }
     .dot-i.active { width: 22px; background: var(--gold); }
 
     /* ── 4. SOCIAL PROOF + TESTIMONIALS + CTA ──────── */
-    .proof { text-align: center; padding: 32px var(--pad) 4px; }
+    /* 48px+ breathing room between the service-cards section and social proof */
+    .proof { text-align: center; padding: 52px var(--pad) 8px; }
     .proof .pin { color: var(--gold); font-size: 14px; letter-spacing: 3px; }
-    .proof h2 {
-      font-family: 'DM Sans'; font-weight: 700; font-size: 19px; letter-spacing: -0.3px;
-      margin-top: 8px; color: var(--ink);
+    .proof .stat-num {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 44px; line-height: 1;
+      letter-spacing: -1.2px; color: var(--green);
     }
-    .proof h2 strong { color: var(--green); }
+    .proof .stat-sub {
+      margin-top: 8px; font-family: 'DM Sans'; font-weight: 600; font-size: 16px;
+      letter-spacing: -0.2px; color: var(--ink);
+    }
+    .stat-row {
+      display: flex; justify-content: center; gap: 0;
+      margin-top: 22px;
+    }
+    .stat-row .stat { padding: 0 26px; }
+    .stat-row .stat + .stat { border-left: 1px solid var(--line); }
+    .stat-row .s-num {
+      font-family: 'DM Sans'; font-weight: 700; font-size: 22px; letter-spacing: -0.4px; color: var(--ink);
+    }
+    .stat-row .s-lbl {
+      margin-top: 3px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--muted);
+    }
 
-    .reviews { padding: 30px var(--pad) 8px; }
+    .reviews { padding: 36px var(--pad) 8px; }
     .reviews h3 {
       font-family: 'DM Sans'; font-weight: 700; font-size: 22px; letter-spacing: -0.4px;
       margin-bottom: 16px;
     }
     .review-card {
+      position: relative; overflow: hidden;
       background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-      padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(17,24,39,0.04);
+      padding: 20px 18px 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(17,24,39,0.04);
+    }
+    /* oversized gold quote mark watermark */
+    .review-card::before {
+      content: '\201C';
+      position: absolute; top: -14px; right: 14px;
+      font-family: 'DM Sans'; font-weight: 700; font-size: 76px; line-height: 1;
+      color: var(--gold); opacity: 0.16; pointer-events: none;
     }
     .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 9px; }
-    .review-text { font-size: 14.5px; line-height: 1.55; color: #374151; }
-    .review-who { margin-top: 11px; font-size: 13px; font-weight: 600; }
-    .review-who span { color: var(--muted); font-weight: 400; }
+    .review-text { position: relative; font-size: 14.5px; line-height: 1.55; color: #374151; }
+    .review-who { margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--ink); }
+    .review-who .meta { color: var(--muted); font-weight: 400; }
+    .review-who .meta::before {
+      content: '—'; color: var(--gold); font-weight: 700; margin: 0 7px;
+    }
 
     .final-cta {
       margin: 24px var(--pad) 40px; padding: 34px 26px 32px;
@@ -202,6 +232,7 @@
       display: inline-flex; align-items: center; gap: 6px;
       background: none; border: none; cursor: pointer;
       font-family: 'Inter'; font-weight: 600; font-size: 15px; color: var(--ink);
+      min-height: 44px; padding: 0 12px 0 0; margin-left: -2px;
     }
     .back-btn:active { opacity: 0.6; }
 
@@ -240,8 +271,9 @@
     .dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
     .price { font-family: 'DM Sans'; font-weight: 700; font-size: 15px; }
     .reserve {
-      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 12px;
-      padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: transform 0.1s ease;
+      border: none; background: var(--green); color: #fff; font-weight: 600; font-size: 13px;
+      min-height: 44px; padding: 12px 16px; border-radius: 999px; cursor: pointer;
+      transition: transform 0.1s ease;
     }
     .reserve:active { transform: scale(0.93); background: var(--green-dark); }
 
@@ -320,8 +352,18 @@
 
       <!-- 4a. SOCIAL PROOF -->
       <section class="proof">
-        <div class="pin">★★★★★</div>
-        <h2>Trusted by <strong>200+ families</strong> in Riverview</h2>
+        <div class="stat-num">200+</div>
+        <div class="stat-sub">families served in Riverview</div>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="s-num">52</div>
+            <div class="s-lbl">Weeks</div>
+          </div>
+          <div class="stat">
+            <div class="s-num">4.9★</div>
+            <div class="s-lbl">Rating</div>
+          </div>
+        </div>
       </section>
 
       <!-- 4b. TESTIMONIALS -->
@@ -330,17 +372,17 @@
         <div class="review-card">
           <div class="stars">★★★★★</div>
           <div class="review-text">“Sunday delivery has changed our week. Restaurant-quality food, zero effort, and the menu never gets old.”</div>
-          <div class="review-who">Maria L. <span>· Member since 2024</span></div>
+          <div class="review-who">Maria L.<span class="meta">Member since 2024</span></div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★★</div>
           <div class="review-text">“Chef Rich catered our anniversary dinner and our guests are still talking about it weeks later.”</div>
-          <div class="review-who">Devon &amp; Amir <span>· Private event</span></div>
+          <div class="review-who">Devon &amp; Amir<span class="meta">Private event</span></div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★★</div>
           <div class="review-text">“Real, scratch-made food I feel good feeding my kids. Skipping a week is effortless when life gets busy.”</div>
-          <div class="review-who">Jenna P. <span>· Member since 2023</span></div>
+          <div class="review-who">Jenna P.<span class="meta">Member since 2023</span></div>
         </div>
       </section>
 
