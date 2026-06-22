@@ -1,4 +1,6 @@
 import Hero from "@/components/hero";
+import ConfidenceBand from "@/components/confidence-band";
+import WeeklyPreview from "@/components/weekly-preview";
 import HowItWorks from "@/components/how-it-works";
 import Programs from "@/components/programs";
 import Testimonials from "@/components/testimonials";
@@ -11,6 +13,12 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <Reveal>
+        <ConfidenceBand />
+      </Reveal>
+      <Reveal>
+        <WeeklyPreview />
+      </Reveal>
       <Reveal>
         <HowItWorks />
       </Reveal>

@@ -12,18 +12,19 @@ export default function Hero() {
     <section id="hero" className="bg-white">
       {/* ---------- The HERO: this week's dinner, in motion ----------
           A single full-bleed video of the food. It autoplays muted
-          (required for iOS), plays once and rests on the final frame, and
-          shows the food photo as a poster while it loads. A slight scale
-          zoom tightens the framing so you feel right at the table; the
-          container clips the scaled-up edges. */}
-      <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden sm:h-[52vh] lg:h-[66vh] lg:max-h-[680px]">
+          (required for iOS), plays once and rests on the final frame. No
+          poster image — the container sits on a dark (#111827) background so
+          there's no flash of a stock photo before the video paints; it just
+          fades from black into the food. A slight scale zoom tightens the
+          framing so you feel right at the table; the container clips the
+          scaled-up edges. */}
+      <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden bg-gray-900 sm:h-[52vh] lg:h-[66vh] lg:max-h-[680px]">
         <video
           className="absolute inset-0 h-full w-full object-cover"
           style={{ transform: "scale(1.3)" }}
           autoPlay
           muted
           playsInline
-          poster="https://images.unsplash.com/photo-1762631383362-bad467f94a8d?w=1600&h=1200&fit=crop&q=80"
           aria-label="A spread of freshly plated, scratch-made dinners from Chef Rich Dino"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
@@ -42,7 +43,7 @@ export default function Hero() {
       </div>
 
       {/* ---------- Conversion content, below the photo, on clean light bg ---------- */}
-      <div className="px-6 pb-24 pt-9 text-center">
+      <div className="px-6 pb-10 pt-6 text-center">
         <div className="mx-auto max-w-[720px]">
           <h1 className="mb-5 font-heading text-[clamp(2.2rem,8vw,3.5rem)] font-extrabold leading-[1.1] tracking-tight text-gray-900">
             Restaurant-Quality Dinners,{" "}
@@ -69,7 +70,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
             {trust.map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <svg className="text-gold-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -80,6 +81,10 @@ export default function Hero() {
               </span>
             ))}
           </div>
+
+          {/* Thin gold rule closes the hero and hands off to the cream
+              confidence band below — a quiet divider, not a hard edge. */}
+          <div className="mx-auto mt-9 h-px w-[60px] bg-gold-400/40" />
         </div>
       </div>
     </section>

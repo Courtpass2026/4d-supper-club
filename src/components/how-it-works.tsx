@@ -1,50 +1,34 @@
+import Image from "next/image";
+
 const steps = [
   {
-    num: "Step 1",
+    num: "01",
     title: "Pick Your Plan",
-    body: "Choose weekly meals for 2 or 4, select any dietary preferences, and set your delivery day.",
-    icon: (
-      <>
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
-      </>
-    ),
+    body: "Browse this week's menu and choose your dishes — no subscription, order only when you want to.",
+    img: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?q=80&w=800&auto=format&fit=crop",
+    alt: "Fresh ingredients laid out in the kitchen",
   },
   {
-    num: "Step 2",
+    num: "02",
     title: "We Cook & Deliver",
-    body: "Chef Rich sources fresh, local ingredients and prepares every dish from scratch in our kitchen.",
-    icon: (
-      <>
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <path d="M16 10a4 4 0 01-8 0" />
-      </>
-    ),
+    body: "Chef Rich cooks everything from scratch Sunday morning and delivers it hot, right to your door.",
+    img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop",
+    alt: "Scratch-made meals packaged for delivery",
   },
   {
-    num: "Step 3",
+    num: "03",
     title: "Heat, Serve, Enjoy",
-    body: "Your meals arrive portioned and ready. Just heat, plate, and sit down to a chef-made dinner.",
-    icon: (
-      <>
-        <path d="M18 8h1a4 4 0 010 8h-1" />
-        <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
-        <line x1="6" y1="1" x2="6" y2="4" />
-        <line x1="10" y1="1" x2="10" y2="4" />
-        <line x1="14" y1="1" x2="14" y2="4" />
-      </>
-    ),
+    body: "Warm it up when you're ready and sit down to a restaurant-quality dinner — no cooking, no cleanup.",
+    img: "https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=800&auto=format&fit=crop",
+    alt: "A family dinner served at the table",
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-gray-50 px-6 py-20">
+    <section id="how-it-works" className="bg-gray-50 px-6 py-16 md:px-8">
       <div className="mx-auto max-w-[1120px]">
-        <div className="mx-auto mb-14 max-w-[600px] text-center">
+        <div className="mx-auto mb-12 max-w-[600px] text-center">
           <div className="mb-3 text-xs font-bold uppercase tracking-wider text-gold-600">
             How It Works
           </div>
@@ -56,23 +40,45 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
-          {steps.map((s) => (
-            <div key={s.num} className="px-6 py-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-xl bg-gold-50">
-                <svg className="text-gold-600" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  {s.icon}
-                </svg>
+        {/* Photo-over-text steps. On mobile the photo always stacks on top of
+            its copy; on md+ the layout alternates side-to-side so the eye
+            zig-zags down the page. */}
+        <div className="flex flex-col gap-12 md:gap-16">
+          {steps.map((s, i) => {
+            const photoRight = i % 2 === 1;
+            return (
+              <div
+                key={s.num}
+                className="md:grid md:grid-cols-2 md:items-center md:gap-12"
+              >
+                <div
+                  className={`relative h-[200px] overflow-hidden rounded-2xl bg-gray-100 shadow-[0_12px_28px_rgba(17,24,39,0.10)] md:h-[300px] ${
+                    photoRight ? "md:order-2" : ""
+                  }`}
+                >
+                  <Image
+                    src={s.img}
+                    alt={s.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 540px"
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className={`pt-4 md:pt-0 ${photoRight ? "md:order-1" : ""}`}>
+                  <div className="font-heading text-[3rem] font-extrabold leading-none tracking-tight text-gold-500/45">
+                    {s.num}
+                  </div>
+                  <h3 className="mt-1 font-heading text-[1.35rem] font-extrabold tracking-tight text-gray-900 md:text-[1.6rem]">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 text-[0.95rem] leading-relaxed text-gray-500 md:text-base">
+                    {s.body}
+                  </p>
+                </div>
               </div>
-              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-gold-600">
-                {s.num}
-              </div>
-              <h3 className="mb-2 text-lg font-bold text-gray-900">{s.title}</h3>
-              <p className="text-[0.925rem] leading-relaxed text-gray-500">
-                {s.body}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -97,6 +97,18 @@ select:focus-visible,
   animation: reveal-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
+/*
+  Horizontal snap-scrollers (e.g. "This Week's Selection") hide their
+  scrollbar so the dish cards read as a clean swipeable row on every OS.
+*/
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Live status indicator — a soft, slow breathing pulse. */
 @keyframes status-pulse {
   0%,
