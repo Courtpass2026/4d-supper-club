@@ -53,7 +53,7 @@
       --warm: #faf8f5;           /* cream / warm light */
       --green: #16a34a;          /* CTA only — Chapter 08 */
       --green-dark: #128a3f;
-      --gold: #C5A55A;           /* accent only */
+      --gold: #C9A84E;           /* accent only */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -82,13 +82,14 @@
     /* shared gold eyebrow label */
     .eyebrow {
       font-family: 'Inter'; font-size: 13px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.22em; color: var(--gold);
     }
 
     /* ════════ CHAPTER 01 — DESIRE ════════ */
     .ch-desire {
       position: relative; height: 50vh; min-height: 380px;
       background: var(--ink); overflow: hidden; padding: 0;
+      box-shadow: inset 0 0 120px 40px rgba(0,0,0,0.25);
     }
     .desire-photo {
       position: absolute; inset: 0; width: 100%; height: 100%;
@@ -116,8 +117,8 @@
     }
     .desire-dish {
       margin-top: var(--space-1);
-      font-family: 'DM Sans'; font-weight: 700; font-size: 32px;
-      line-height: 1.1; letter-spacing: -0.6px; color: var(--white);
+      font-family: 'DM Sans'; font-weight: 700; font-size: 34px;
+      line-height: 1.1; letter-spacing: -0.8px; color: var(--white);
       opacity: 0; transform: translateY(10px);
     }
     .reveal.in { animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both; }
@@ -159,11 +160,11 @@
       width: 100%; height: 240px; object-fit: cover; display: block;
       border-radius: 16px;            /* rounded-2xl */
     }
-    .ch-trust .eyebrow { display: block; margin-top: var(--space-4); }
+    .ch-trust .eyebrow { display: block; margin-top: var(--space-5); }
     .trust-head {
       margin-top: var(--space-2);
       font-family: 'DM Sans'; font-size: 22px; font-weight: 600;
-      letter-spacing: -0.3px; color: var(--ink); line-height: 1.3;
+      letter-spacing: -0.5px; color: var(--ink); line-height: 1.3;
     }
     .trust-body {
       margin-top: var(--space-3);
@@ -184,7 +185,12 @@
     /* ════════ CHAPTER 05 — CRAVING ════════ */
     /* The signature full-bleed: food consumes the entire screen. No padding,
        no gutters, no rounding — the image IS the chapter. */
-    .ch-craving { background: var(--white); padding: 0; }
+    .ch-craving { background: var(--white); padding: 0; position: relative; }
+    .ch-craving::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(17,24,39,0.03), rgba(17,24,39,0.12));
+      pointer-events: none;
+    }
     .craving-hero {
       display: block; width: 100%; height: 70vh; min-height: 70vh;
       object-fit: cover;
@@ -203,7 +209,7 @@
     }
     .aspire-cards {
       margin-top: var(--space-6);
-      display: flex; flex-direction: column; gap: var(--space-5);
+      display: flex; flex-direction: column; gap: var(--space-8);
     }
     .aspire-card { cursor: pointer; }
     .aspire-card img {
@@ -230,7 +236,7 @@
       object-fit: cover; border-radius: 16px;   /* rounded-2xl */
     }
     .belong-mark {
-      margin-top: var(--space-4);
+      margin-top: var(--space-5);
       font-family: 'DM Sans'; font-weight: 700; font-size: 64px;
       line-height: 0.6; color: var(--gold); opacity: 0.20;
     }
@@ -260,9 +266,10 @@
       background: var(--green); color: var(--white); border: none;
       font-family: 'Inter'; font-weight: 600; font-size: 16px;
       border-radius: var(--btn-r); cursor: pointer;
+      box-shadow: 0 0 40px 8px rgba(22,163,74,0.15);
       transition: transform 0.12s ease, background 0.12s ease;
     }
-    .btn-join:active { transform: scale(0.985); background: var(--green-dark); }
+    .btn-join:active { transform: scale(0.985); background: var(--green-dark); box-shadow: 0 0 30px 6px rgba(22,163,74,0.1); }
     .secondary-links {
       margin-top: 0;
       display: flex; flex-direction: column; gap: var(--space-2);
@@ -314,7 +321,7 @@
       <section class="chapter ch-trust">
         <div class="wrap">
           <img class="trust-photo" data-fallback
-               src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=85"
+               src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=900&q=85"
                alt="Chef's hands finishing a plate">
           <div class="eyebrow">Meet Chef Rich</div>
           <div class="trust-head">18 years in professional kitchens. Now cooking for fewer than 200 families.</div>
@@ -337,7 +344,7 @@
       <!-- ════════ 05 — CRAVING ════════ -->
       <section class="chapter ch-craving">
         <img class="craving-hero" data-fallback
-             src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?auto=format&fit=crop&w=1200&q=85"
+             src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=90"
              alt="Sauce drizzling over a tight crop of seared meat">
         <div class="craving-caption">Seasonal. Scratch-made. Delivered.</div>
       </section>
