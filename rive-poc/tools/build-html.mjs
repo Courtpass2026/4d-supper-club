@@ -56,3 +56,25 @@ writeFileSync(out, html);
 console.log(
   `wrote ${out} (${(html.length / 1e6).toFixed(2)} MB: wasm ${wasm.length} B, riv ${riv.length} B, runtime JS ${runtimeJs.length} B)`,
 );
+
+// --artifact <file>: the same page without the document wrapper tags, for
+// hosts that supply their own <!doctype>/<head>/<body> (claude.ai Artifacts).
+const artifactIdx = process.argv.indexOf("--artifact");
+if (artifactIdx > 0) {
+  const artifactOut = process.argv[artifactIdx + 1];
+  const head = html.slice(0, html.indexOf("<!--")); // wrapper tags live before the first comment
+  const stripped = head
+    .replace(/^<!doctype html>\n/i, "")
+    .replace(/^<html[^>]*>\n/m, "")
+    .replace(/^<head>\n/m, "")
+    .replace(/^<meta charset[^>]*>\n/m, "")
+    .replace(/^<meta name="viewport"[^>]*>\n/m, "")
+    .replace(/^<\/head>\n/m, "")
+    .replace(/^<body>\n/m, "");
+  const tail = html.slice(html.indexOf("<!--")).replace(/<\/body>\n<\/html>\n?$/, "");
+  if (/<\/?(html|head|body)\b/i.test(stripped) || !html.trimEnd().endsWith("</html>")) {
+    throw new Error("could not strip the document wrapper");
+  }
+  writeFileSync(artifactOut, stripped + tail);
+  console.log(`wrote ${artifactOut} (artifact variant)`);
+}

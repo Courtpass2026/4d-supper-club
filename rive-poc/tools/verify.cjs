@@ -175,6 +175,33 @@ async function openPage(browser, query = "", device = { viewport: { width: 1280,
     check(`iPhone ${name}: both fighters fully on screen`, info.visible, `fighter ~${info.fighterPx} CSS px tall`);
     await s.page.screenshot({ path: path.join(outDir, `iphone-${name}.png`) });
 
+    if (name === "portrait") {
+      // The on-screen buttons stand in for ?rigs= / ?dpr= where query strings don't reach the page.
+      await s.page.tap("#dpr-button");
+      await s.page.tap("#rigs-button");
+      await s.page.waitForTimeout(800);
+      const after = await s.page.evaluate(() => ({
+        dpr: window.__rigTest.view().dpr,
+        width: document.getElementById("stage").width,
+        rigs: window.__rigTest.matches.length * 2,
+        labels: [...document.querySelectorAll("#controls button")].map((b) => b.textContent),
+        frames: window.__rigTest.stats.frames,
+      }));
+      await s.page.waitForTimeout(300);
+      const still = await s.page.evaluate(() => window.__rigTest.stats.frames);
+      check(
+        "iPhone buttons switch resolution and fighter count",
+        after.dpr === 2 && after.width === 804 && after.rigs === 20 && still > after.frames && s.errors.length === 0,
+        `${after.labels.join(" / ")}, canvas width ${after.width}`,
+      );
+      await s.page.screenshot({ path: path.join(outDir, "iphone-portrait-20-rigs.png") });
+      await s.page.tap("#rigs-button"); // 100
+      await s.page.tap("#rigs-button"); // back to 2
+      await s.page.tap("#dpr-button"); // 1x
+      await s.page.tap("#dpr-button"); // back to 3x
+      await s.page.waitForTimeout(500);
+    }
+
     // Chromium reports no safe-area insets, so simulate the iPhone's
     // (Dynamic Island / home bar, approximate) and check the layout respects them.
     const inset = name === "landscape" ? { top: 0, right: 62, bottom: 21, left: 62 } : { top: 62, right: 0, bottom: 34, left: 0 };

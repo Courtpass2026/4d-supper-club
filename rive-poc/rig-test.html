@@ -5,17 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rive Rig Test</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #0e0f15; overflow: hidden; }
+  :root {
+    color-scheme: dark;
+    --bg: #0e0f15;
+    --ink: #e8e9f0;
+    --control: rgba(22, 24, 34, 0.82);
+    --control-edge: rgba(232, 233, 240, 0.22);
+    --focus: #6f9bff;
+    --error: #ff8a80;
+  }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
   canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
   /* Invisible probe: its padding resolves to the notch / Dynamic Island / home-bar insets. */
   #safe { position: fixed; visibility: hidden; pointer-events: none;
           padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
-  #error { position: fixed; inset: 16px; color: #ff8a80; font: 14px/1.4 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
+  #controls { position: fixed; z-index: 1; display: flex; gap: 8px;
+              right: calc(env(safe-area-inset-right, 0px) + 12px); bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); }
+  #controls button { min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--control-edge);
+                     background: var(--control); color: var(--ink); font: 600 13px/1 system-ui, -apple-system, sans-serif;
+                     font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  #controls button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  #error { position: fixed; z-index: 2; inset: 16px; color: var(--error); font: 14px/1.4 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
 </style>
 </head>
 <body>
 <canvas id="stage"></canvas>
 <div id="safe"></div>
+<div id="controls">
+  <button id="rigs-button" type="button">2 fighters</button>
+  <button id="dpr-button" type="button">3× resolution</button>
+</div>
 <div id="error" hidden></div>
 
 <!--
@@ -326,10 +345,11 @@ async function boot() {
   // 3rd arg false: no Rive CDN asset loader (the file has no assets anyway).
   const file = await rive.load(base64Bytes("rig-riv"), undefined, false);
 
+  // Starting settings: ?rigs=N and ?dpr=N, then the on-screen buttons.
   const params = new URLSearchParams(location.search);
-  const pairs = Math.max(1, Math.ceil((parseInt(params.get("rigs"), 10) || 2) / 2));
-  const cols = Math.ceil(Math.sqrt(pairs));
-  const rows = Math.ceil(pairs / cols);
+  const RIG_STEPS = [2, 20, 100];
+  let rigCount = parseInt(params.get("rigs"), 10) || 2;
+  let pairs = 1, cols = 1, rows = 1;
 
   function makeFighter() {
     const artboard = file.artboardByName("Fighter"); // a new instance each call
@@ -343,27 +363,40 @@ async function boot() {
 
   const TILE_W = 1200, TILE_H = 600, FLOOR = 520;
   const matches = [];
-  for (let i = 0; i < pairs; i++) {
-    matches.push({
-      ox: (i % cols) * TILE_W,
-      oy: Math.floor(i / cols) * TILE_H,
-      seed: i * 0.77,
-      a: makeFighter(),
-      b: makeFighter(),
-      hit: 0, // hit-reaction envelope for B
-      flash: null,
-    });
+  function buildMatches() {
+    for (const m of matches) {
+      m.a.artboard.delete();
+      m.b.artboard.delete();
+    }
+    matches.length = 0;
+    pairs = Math.max(1, Math.ceil(rigCount / 2));
+    cols = Math.ceil(Math.sqrt(pairs));
+    rows = Math.ceil(pairs / cols);
+    for (let i = 0; i < pairs; i++) {
+      matches.push({
+        ox: (i % cols) * TILE_W,
+        oy: Math.floor(i / cols) * TILE_H,
+        seed: i * 0.77,
+        a: makeFighter(),
+        b: makeFighter(),
+        hit: 0, // hit-reaction envelope for B
+        flash: null,
+      });
+    }
   }
+  buildMatches();
 
   const canvas = document.getElementById("stage");
   const ctx = canvas.getContext("2d");
   const renderer = rive.makeRenderer(canvas);
-  // Native pixel density by default (3 on iPhone 17 Pro); ?dpr=2 to compare.
-  const dprParam = parseFloat(params.get("dpr"));
+  // Native pixel density by default (3 on iPhone 17 Pro), capped at 3.
+  const nativeDpr = Math.min(window.devicePixelRatio || 1, 3);
+  const DPR_STEPS = [...new Set([nativeDpr, 2, 1])];
+  let dprChoice = parseFloat(params.get("dpr")) > 0 ? parseFloat(params.get("dpr")) : nativeDpr;
   let dpr = 1, cam = { s: 1, x: 0, y: 0 }, safe = { top: 0, right: 0, bottom: 0, left: 0 };
 
   function resize() {
-    dpr = dprParam > 0 ? dprParam : Math.min(window.devicePixelRatio || 1, 3);
+    dpr = dprChoice;
     const w = canvas.clientWidth, h = canvas.clientHeight;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
@@ -475,8 +508,10 @@ async function boot() {
     ctx.fillText(lines[0], 20, 16 + big);
     ctx.font = `${small}px ui-monospace, Menlo, monospace`;
     lines.slice(1).forEach((l, i) => ctx.fillText(l, 20, 16 + big + gap * (i + 1)));
-    ctx.fillStyle = "rgba(255,255,255,0.55)";
-    ctx.fillText("bg: 2D  |  fighters: Rive  |  flash + HUD: 2D", 12, canvas.clientHeight - safe.top - safe.bottom - 12);
+    if (canvas.clientWidth >= 700) { // phones in portrait: the buttons need the room
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.fillText("bg: 2D  |  fighters: Rive  |  flash + HUD: 2D", 12, canvas.clientHeight - safe.top - safe.bottom - 22);
+    }
   }
 
   // ---- Frame loop ---------------------------------------------------------
@@ -558,6 +593,35 @@ async function boot() {
     drawHud();
     requestAnimationFrame(frame);
   }
+
+  // ---- On-screen controls (query strings aren't available everywhere) ----
+  const rigsButton = document.getElementById("rigs-button");
+  const dprButton = document.getElementById("dpr-button");
+  function label() {
+    rigsButton.textContent = `${matches.length * 2} fighters`;
+    dprButton.textContent = `${dpr}× resolution`;
+  }
+  function resetStats() {
+    fpsFrames = 0;
+    msSum = 0;
+    fpsStart = performance.now();
+    stats.fps = 0;
+  }
+  const next = (steps, value) => steps[(steps.indexOf(value) + 1) % steps.length];
+  rigsButton.addEventListener("click", () => {
+    rigCount = next(RIG_STEPS, rigCount);
+    buildMatches();
+    resize();
+    resetStats();
+    label();
+  });
+  dprButton.addEventListener("click", () => {
+    dprChoice = next(DPR_STEPS, dprChoice);
+    resize();
+    resetStats();
+    label();
+  });
+  label();
 
   // Handle for tools/verify.cjs (and for poking at from the console).
   window.__rigTest = { rive, file, matches, stats, JOINTS, view: () => ({ dpr, cam, safe }) };

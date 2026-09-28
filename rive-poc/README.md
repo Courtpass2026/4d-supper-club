@@ -15,11 +15,11 @@ are needed.
 | File | What it is |
 | --- | --- |
 | `fighter-rig-test.riv` | The placeholder rig: artboard `Fighter`, 600×600, 16 bones, 15 shapes |
-| `rig-test.html` | The test page, fully self-contained (2.69 MB). Open it straight from disk. `?rigs=20` runs a stress test; `?dpr=2` overrides the pixel density. |
+| `rig-test.html` | The test page, fully self-contained (2.69 MB). Open it straight from disk. The buttons at the bottom right switch the fighter count (2 / 20 / 100) and the resolution; `?rigs=20` and `?dpr=2` set the starting values. |
 | `src/rig-test.src.html` | Readable source of the page (placeholders instead of the inlined blobs) |
 | `tools/build-rig.mjs` | Generates `fighter-rig-test.riv` (bones, shapes, colours, draw order) |
 | `tools/riv-writer.mjs` | Minimal writer for Rive's binary `.riv` format |
-| `tools/build-html.mjs` | Inlines the runtime JS, `.wasm` and `.riv` into `rig-test.html` |
+| `tools/build-html.mjs` | Inlines the runtime JS, `.wasm` and `.riv` into `rig-test.html`. `--artifact <file>` also writes a copy without the `<html>`/`<head>`/`<body>` wrapper, for hosts that add their own (claude.ai Artifacts). |
 | `tools/verify.cjs` | Headless Chromium checks (desktop and iPhone 17 Pro emulation) and FPS measurement |
 
 Rebuild: `node tools/build-rig.mjs && node tools/build-html.mjs`.
@@ -138,9 +138,10 @@ compilation) took about 115 ms.
 The target device is the iPhone 17 Pro: 402×874 CSS pixels at 3× (a 1206×2622
 canvas) with a 120 Hz screen.
 
-- **Getting it onto the phone.** A local HTML file opened from the Files app
-  only shows a preview, and the preview doesn't run scripts. Serve it from the
-  Mac instead:
+- **Getting it onto the phone.** A copy is published as a private claude.ai
+  Artifact that opens straight in Safari or the Claude app. A local HTML file
+  opened from the Files app, or from a file attachment in the Claude app, only
+  shows its source code. To test the file itself, serve it from the Mac:
   1. In this folder on the Mac, run `python3 -m http.server 8000`.
   2. Run `ipconfig getifaddr en0` to get the Mac's IP address.
   3. With the phone on the same Wi-Fi, open `http://<that IP>:8000/rig-test.html`
@@ -150,8 +151,9 @@ canvas) with a 120 Hz screen.
   orientation and keeps them and the FPS counter clear of the Dynamic Island
   and home bar. On short screens (a phone in landscape) the counter shrinks to
   two lines.
-- **Pixel density.** The page draws at the phone's full 3× by default. Add
-  `?dpr=2` to compare the cost. Parameters combine: `?rigs=20&dpr=2`.
+- **Pixel density.** The page draws at the phone's full 3× by default. Tap
+  "3× resolution" to step down to 2× and 1× and compare the cost; tap the
+  fighters button for 20 and 100 fighters.
 - **120 Hz.** Safari and in-app web views have historically capped
   `requestAnimationFrame` at 60 fps even on 120 Hz iPhones, so the counter
   will most likely read 60. That is the target anyway, because the game
