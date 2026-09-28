@@ -28,8 +28,8 @@ function check(name, ok, detail) {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? "  -- " + detail : ""}`);
 }
 
-async function openPage(browser, query = "") {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, offline: true });
+async function openPage(browser, query = "", device = { viewport: { width: 1280, height: 720 } }) {
+  const context = await browser.newContext({ ...device, offline: true });
   const page = await context.newPage();
   const requests = [];
   const errors = [];
@@ -149,6 +149,78 @@ async function openPage(browser, query = "") {
     console.log(`  rigs=${String(rigs).padStart(3)}  fps ${fps.toFixed(1)}  JS frame ${ms.toFixed(2)} ms  boot ${samples[0].bootMs.toFixed(0)} ms`);
     if (rigs === 2) await s.page.screenshot({ path: path.join(outDir, "rig-test.png") });
     if (rigs === 20) await s.page.screenshot({ path: path.join(outDir, "rigs-20.png") });
+    await s.context.close();
+  }
+
+  // ---- iPhone 17 Pro layout (Chromium emulation: size + 3x density only) ---
+  console.log("\niPhone 17 Pro emulation (402x874 CSS px @3x; not real WebKit):");
+  for (const [name, viewport] of [["portrait", { width: 402, height: 874 }], ["landscape", { width: 874, height: 402 }]]) {
+    const s = await openPage(browser, "", { viewport, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+    await s.page.waitForTimeout(1500);
+    const info = await s.page.evaluate(() => {
+      const { matches, view } = window.__rigTest;
+      const { dpr, cam } = view();
+      const c = document.getElementById("stage");
+      const onScreen = (bone, along) => {
+        const w = bone.worldTransform();
+        const x = cam.x + cam.s * (w.tx + w.xx * along), y = cam.y + cam.s * (w.ty + w.xy * along);
+        w.delete();
+        return x >= 0 && x <= c.clientWidth && y >= 0 && y <= c.clientHeight;
+      };
+      const m = matches[0];
+      const visible = ["head", "fFoot", "bFoot", "fHand", "bHand"].every((b) => onScreen(m.a.bones[b], 10) && onScreen(m.b.bones[b], 10));
+      return { dpr, canvas: [c.width, c.height], fighterPx: Math.round(220 * cam.s), visible, error: window.__rigTest.error };
+    });
+    check(`iPhone ${name}: boots at 3x`, !info.error && info.dpr === 3 && info.canvas[0] === viewport.width * 3, `canvas ${info.canvas.join("x")}`);
+    check(`iPhone ${name}: both fighters fully on screen`, info.visible, `fighter ~${info.fighterPx} CSS px tall`);
+    await s.page.screenshot({ path: path.join(outDir, `iphone-${name}.png`) });
+
+    // Chromium reports no safe-area insets, so simulate the iPhone's
+    // (Dynamic Island / home bar, approximate) and check the layout respects them.
+    const inset = name === "landscape" ? { top: 0, right: 62, bottom: 21, left: 62 } : { top: 62, right: 0, bottom: 34, left: 0 };
+    await s.page.addStyleTag({ content: `#safe { padding: ${inset.top}px ${inset.right}px ${inset.bottom}px ${inset.left}px !important; }` });
+    await s.page.evaluate(() => window.dispatchEvent(new Event("resize")));
+    await s.page.waitForTimeout(300);
+    const safeInfo = await s.page.evaluate(() => {
+      const { matches, view } = window.__rigTest;
+      const { cam, safe } = view();
+      const c = document.getElementById("stage");
+      const m = matches[0];
+      const xs = [], ys = [];
+      for (const f of [m.a, m.b]) for (const b of ["head", "fHand", "bHand", "fFoot", "bFoot"]) {
+        const w = f.bones[b].worldTransform();
+        xs.push(cam.x + cam.s * w.tx); ys.push(cam.y + cam.s * w.ty);
+        w.delete();
+      }
+      // HUD box (see drawHud) vs. each head circle, sampled over the next second below.
+      const compact = c.clientHeight < 500;
+      const hud = { x0: safe.left + 10, y0: safe.top + 10, x1: safe.left + 10 + (compact ? 250 : 300), y1: safe.top + 10 + (compact ? 53 : 116) };
+      return { safe, hud, minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys), w: c.clientWidth, h: c.clientHeight };
+    });
+    const sf = safeInfo.safe;
+    check(
+      `iPhone ${name}: fighters stay inside simulated safe area`,
+      sf.left === inset.left && sf.top === inset.top && safeInfo.minX > sf.left && safeInfo.maxX < safeInfo.w - sf.right && safeInfo.minY > sf.top && safeInfo.maxY < safeInfo.h - sf.bottom,
+      `insets ${JSON.stringify(sf)}`,
+    );
+    let hudHits = 0;
+    for (let i = 0; i < 20; i++) {
+      await s.page.waitForTimeout(90); // ~2 s: covers a full kick cycle
+      hudHits += await s.page.evaluate((hud) => {
+        const { matches, view } = window.__rigTest;
+        const { cam } = view();
+        let hits = 0;
+        for (const f of [matches[0].a, matches[0].b]) {
+          const w = f.bones.head.worldTransform();
+          const cx = cam.x + cam.s * (w.tx + w.xx * 15), cy = cam.y + cam.s * (w.ty + w.xy * 15), r = cam.s * 16;
+          w.delete();
+          if (cx + r > hud.x0 && cx - r < hud.x1 && cy + r > hud.y0 && cy - r < hud.y1) hits++;
+        }
+        return hits;
+      }, safeInfo.hud);
+    }
+    check(`iPhone ${name}: FPS box never covers a fighter's head`, hudHits === 0, `${hudHits} overlapping samples`);
+    await s.page.screenshot({ path: path.join(outDir, `iphone-${name}-insets.png`) });
     await s.context.close();
   }
 

@@ -15,12 +15,12 @@ are needed.
 | File | What it is |
 | --- | --- |
 | `fighter-rig-test.riv` | The placeholder rig: artboard `Fighter`, 600×600, 16 bones, 15 shapes |
-| `rig-test.html` | The test page, fully self-contained (2.69 MB). Open it straight from disk. `?rigs=20` runs a stress test. |
+| `rig-test.html` | The test page, fully self-contained (2.69 MB). Open it straight from disk. `?rigs=20` runs a stress test; `?dpr=2` overrides the pixel density. |
 | `src/rig-test.src.html` | Readable source of the page (placeholders instead of the inlined blobs) |
 | `tools/build-rig.mjs` | Generates `fighter-rig-test.riv` (bones, shapes, colours, draw order) |
 | `tools/riv-writer.mjs` | Minimal writer for Rive's binary `.riv` format |
 | `tools/build-html.mjs` | Inlines the runtime JS, `.wasm` and `.riv` into `rig-test.html` |
-| `tools/verify.cjs` | Headless Chromium checks and FPS measurement |
+| `tools/verify.cjs` | Headless Chromium checks (desktop and iPhone 17 Pro emulation) and FPS measurement |
 
 Rebuild: `node tools/build-rig.mjs && node tools/build-html.mjs`.
 Verify: `NODE_PATH="$(npm root -g)" node tools/verify.cjs` (needs `npm i -g playwright`).
@@ -132,6 +132,40 @@ software rendering and no GPU, at 1280×720. **They are not Mac numbers.** Open
 
 Startup (page start to first frame, including base64 decoding and wasm
 compilation) took about 115 ms.
+
+## Testing on the iPhone 17 Pro
+
+The target device is the iPhone 17 Pro: 402×874 CSS pixels at 3× (a 1206×2622
+canvas) with a 120 Hz screen.
+
+- **Getting it onto the phone.** A local HTML file opened from the Files app
+  only shows a preview, and the preview doesn't run scripts. Serve it from the
+  Mac instead:
+  1. In this folder on the Mac, run `python3 -m http.server 8000`.
+  2. Run `ipconfig getifaddr en0` to get the Mac's IP address.
+  3. With the phone on the same Wi-Fi, open `http://<that IP>:8000/rig-test.html`
+     in Safari.
+  The page still makes no requests beyond itself.
+- **Try landscape and portrait.** The page frames the fighters for either
+  orientation and keeps them and the FPS counter clear of the Dynamic Island
+  and home bar. On short screens (a phone in landscape) the counter shrinks to
+  two lines.
+- **Pixel density.** The page draws at the phone's full 3× by default. Add
+  `?dpr=2` to compare the cost. Parameters combine: `?rigs=20&dpr=2`.
+- **120 Hz.** Safari and in-app web views have historically capped
+  `requestAnimationFrame` at 60 fps even on 120 Hz iPhones, so the counter
+  will most likely read 60. That is the target anyway, because the game
+  simulates at 60 steps per second. If it ever reads 120, draw the latest
+  60 Hz pose, or interpolate between poses.
+- **Deeper profiling.** On the phone, turn on Settings → Apps → Safari →
+  Advanced → Web Inspector. Then, on the Mac, use Safari's Develop menu →
+  your iPhone → the page, and record a Timeline.
+
+![iPhone 17 Pro landscape emulation at 3x with simulated Dynamic Island insets](docs/iphone-17-pro-landscape.png)
+
+`tools/verify.cjs` also runs the page in Chromium's iPhone 17 Pro emulation,
+in portrait and landscape at 3×, with simulated Dynamic Island insets. That
+checks layout only; it is not WebKit and not the phone's GPU.
 
 ## Gotchas
 
