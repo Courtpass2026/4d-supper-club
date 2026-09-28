@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rive Rig Test</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0e0f15; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  #error { position: fixed; inset: 16px; color: #ff8a80; font: 14px/1.4 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="error" hidden></div>
+
+<!--
+  Everything this page needs is inlined below, so it makes no network requests:
+    #rive-wasm  Rive runtime WebAssembly (@rive-app/canvas-advanced __RIVE_VERSION__), base64
+    #rig-riv    fighter-rig-test.riv, base64
+    the Rive runtime JS glue (same package), as a classic script
+-->
+<script type="application/base64" id="rive-wasm">__RIVE_WASM_BASE64__</script>
+<script type="application/base64" id="rig-riv">__RIG_RIV_BASE64__</script>
+<script>
+/*__RIVE_RUNTIME_JS__*/
+</script>
+
+<script>
+"use strict";
+
+// ---------------------------------------------------------------------------
+// Rig description. Must match the bone names in fighter-rig-test.riv.
+// ---------------------------------------------------------------------------
+const PARENT = {
+  pelvis: null,
+  torso: "pelvis", neck: "torso", head: "neck",
+  fUpperArm: "torso", fForearm: "fUpperArm", fHand: "fForearm",
+  bUpperArm: "torso", bForearm: "bUpperArm", bHand: "bForearm",
+  fThigh: "pelvis", fShin: "fThigh", fFoot: "fShin",
+  bThigh: "pelvis", bShin: "bThigh", bFoot: "bShin",
+};
+const JOINTS = Object.keys(PARENT); // parents always come before children
+const LEN = { thigh: 47, shin: 48, foot: 17 };
+const HIP = { f: { x: 5, y: 4 }, b: { x: -4, y: 4 } };
+const HEEL = 8; // shin capsule's round end below the ankle
+const DEG = Math.PI / 180;
+
+// ---------------------------------------------------------------------------
+// "Game side": poses are absolute angles in degrees, in character space
+// (character facing right, y down, 0 = pointing forward, 90 = pointing down,
+// positive = clockwise). This stands in for the game's own joint solver.
+// ---------------------------------------------------------------------------
+const GUARD = {
+  pelvis: 0, torso: -80, neck: -78, head: -80,
+  fUpperArm: 55, fForearm: -75, fHand: -60,
+  bUpperArm: 70, bForearm: -85, bHand: -70,
+  fThigh: 70, fShin: 100, fFoot: 0,
+  bThigh: 110, bShin: 85, bFoot: 20,
+};
+const CHAMBER = {
+  pelvis: -10, torso: -100, neck: -95, head: -90,
+  fUpperArm: 130, fForearm: 170, fHand: 170,
+  bUpperArm: 60, bForearm: -80, bHand: -70,
+  fThigh: 0, fShin: 110, fFoot: 120,
+  bThigh: 95, bShin: 92, bFoot: 20,
+};
+const EXTEND = {
+  ...CHAMBER,
+  pelvis: -15, torso: -110, neck: -104, head: -98,
+  fThigh: -12, fShin: -12, fFoot: -5,
+};
+
+const smooth = (x) => x * x * (3 - 2 * x);
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+function mix(a, b, t) {
+  const out = {};
+  for (const j of JOINTS) out[j] = a[j] + (b[j] - a[j]) * t;
+  return out;
+}
+
+// Repeating roundhouse: guard -> chamber -> extend (impact) -> chamber -> guard.
+const KICK_PERIOD = 1.8;
+function kickPose(phase) {
+  if (phase < 0.3) return { pose: GUARD, impact: -1 };
+  if (phase < 0.45) return { pose: mix(GUARD, CHAMBER, smooth((phase - 0.3) / 0.15)), impact: -1 };
+  if (phase < 0.55) return { pose: mix(CHAMBER, EXTEND, smooth((phase - 0.45) / 0.1)), impact: -1 };
+  if (phase < 0.65) return { pose: EXTEND, impact: (phase - 0.55) / 0.1 };
+  if (phase < 0.8) return { pose: mix(EXTEND, CHAMBER, smooth((phase - 0.65) / 0.15)), impact: -1 };
+  return { pose: mix(CHAMBER, GUARD, smooth((phase - 0.8) / 0.2)), impact: -1 };
+}
+
+// Sine-wave motion on every joint (degrees), different phase per joint.
+function addSines(pose, t, amp, seed) {
+  const out = {};
+  JOINTS.forEach((j, i) => {
+    out[j] = pose[j] + amp[j] * Math.sin(t * (3.1 + (i % 4) * 0.7) + seed + i * 1.3);
+  });
+  return out;
+}
+const AMP_A = Object.fromEntries(JOINTS.map((j) => [j, j === "pelvis" ? 2 : 5]));
+const AMP_B = Object.fromEntries(JOINTS.map((j) => [j, /Arm|Forearm|Hand/.test(j) ? 14 : j === "pelvis" ? 3 : 7]));
+
+// Forward kinematics for the legs (the game already has this): the lowest
+// point below the pelvis, so the fighter stands on the floor.
+function lowestBelowPelvis(pose) {
+  const pr = pose.pelvis * DEG;
+  let lowest = 0;
+  for (const s of ["f", "b"]) {
+    const hy = HIP[s].x * Math.sin(pr) + HIP[s].y * Math.cos(pr);
+    const t = pose[s + "Thigh"] * DEG, k = pose[s + "Shin"] * DEG, f = pose[s + "Foot"] * DEG;
+    const ankle = hy + LEN.thigh * Math.sin(t) + LEN.shin * Math.sin(k);
+    const toe = ankle + LEN.foot * Math.sin(f);
+    lowest = Math.max(lowest, ankle + HEEL, toe + 5);
+  }
+  return lowest;
+}
+// Foot tip in character space (for cross-checking Rive's own transforms).
+function footTip(pose, side) {
+  const pr = pose.pelvis * DEG;
+  const h = HIP[side];
+  let x = h.x * Math.cos(pr) - h.y * Math.sin(pr);
+  let y = h.x * Math.sin(pr) + h.y * Math.cos(pr);
+  for (const [bone, len] of [["Thigh", LEN.thigh], ["Shin", LEN.shin], ["Foot", LEN.foot]]) {
+    const a = pose[side + bone] * DEG;
+    x += len * Math.cos(a);
+    y += len * Math.sin(a);
+  }
+  return { x, y };
+}
+
+// ---------------------------------------------------------------------------
+// Rive side: bone rotations are radians, relative to the parent bone.
+// ---------------------------------------------------------------------------
+function applyPose(fighter, pose, x, y, facing) {
+  const { bones, pelvis } = fighter;
+  for (const j of JOINTS) {
+    const parent = PARENT[j];
+    const local = parent ? pose[j] - pose[parent] : pose[j];
+    bones[j].rotation = local * DEG;
+  }
+  pelvis.x = x;
+  pelvis.y = y;
+  pelvis.scaleX = facing; // 1 = facing right, -1 = facing left (mirrors the whole rig)
+}
+
+// ---------------------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------------------
+function base64Bytes(id) {
+  const bin = atob(document.getElementById(id).textContent.trim());
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+function fail(err) {
+  const el = document.getElementById("error");
+  el.hidden = false;
+  el.textContent = "Rig test failed:\n" + (err && err.stack ? err.stack : String(err));
+  window.__rigTest = { error: String(err) };
+  throw err;
+}
+
+async function boot() {
+  const wasmBytes = base64Bytes("rive-wasm");
+  const rive = await RiveCanvasAdvanced({
+    // Hand the runtime our inlined .wasm so it never tries to fetch one.
+    instantiateWasm(imports, done) {
+      WebAssembly.instantiate(wasmBytes, imports)
+        .then((r) => done(r.instance, r.module))
+        .catch(fail);
+      return {};
+    },
+  });
+  // 3rd arg false: no Rive CDN asset loader (the file has no assets anyway).
+  const file = await rive.load(base64Bytes("rig-riv"), undefined, false);
+
+  const params = new URLSearchParams(location.search);
+  const pairs = Math.max(1, Math.ceil((parseInt(params.get("rigs"), 10) || 2) / 2));
+  const cols = Math.ceil(Math.sqrt(pairs));
+  const rows = Math.ceil(pairs / cols);
+
+  function makeFighter() {
+    const artboard = file.artboardByName("Fighter"); // a new instance each call
+    const bones = {};
+    for (const j of JOINTS) {
+      bones[j] = artboard.bone(j);
+      if (!bones[j]) throw new Error(`bone "${j}" not found in rig`);
+    }
+    return { artboard, bones, pelvis: artboard.rootBone("pelvis") };
+  }
+
+  const TILE_W = 1200, TILE_H = 600, FLOOR = 520;
+  const matches = [];
+  for (let i = 0; i < pairs; i++) {
+    matches.push({
+      ox: (i % cols) * TILE_W,
+      oy: Math.floor(i / cols) * TILE_H,
+      seed: i * 0.77,
+      a: makeFighter(),
+      b: makeFighter(),
+      hit: 0, // hit-reaction envelope for B
+      flash: null,
+    });
+  }
+
+  const canvas = document.getElementById("stage");
+  const ctx = canvas.getContext("2d");
+  const renderer = rive.makeRenderer(canvas);
+  let dpr = 1, cam = { s: 1, x: 0, y: 0 };
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    // One match: frame the ring. Stress test (?rigs=N): fit the whole grid.
+    const view = pairs === 1
+      ? { x: 120, y: 210, w: 960, h: 400 }
+      : { x: 0, y: 0, w: cols * TILE_W, h: rows * TILE_H };
+    const s = Math.min(w / view.w, h / view.h);
+    cam = { s, x: (w - view.w * s) / 2 - view.x * s, y: (h - view.h * s) / 2 - view.y * s };
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // ---- 2D: background (drawn BEFORE Rive) --------------------------------
+  function drawBackground(t) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const g = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight);
+    g.addColorStop(0, "#1b1d2a");
+    g.addColorStop(1, "#0b0c11");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    ctx.setTransform(dpr * cam.s, 0, 0, dpr * cam.s, dpr * cam.x, dpr * cam.y);
+    for (const m of matches) {
+      ctx.save();
+      ctx.translate(m.ox, m.oy);
+      // spotlight
+      const spot = ctx.createRadialGradient(600, 260, 20, 600, 260, 420);
+      spot.addColorStop(0, `rgba(255,236,200,${0.16 + 0.03 * Math.sin(t * 2)})`);
+      spot.addColorStop(1, "rgba(255,236,200,0)");
+      ctx.fillStyle = spot;
+      ctx.fillRect(0, 0, TILE_W, TILE_H);
+      // mat + apron
+      ctx.fillStyle = "#3a4a6b";
+      ctx.fillRect(120, FLOOR, 960, 22);
+      ctx.fillStyle = "#23262f";
+      ctx.fillRect(100, FLOOR + 22, 1000, 58);
+      // posts + back ropes
+      ctx.fillStyle = "#c9ccd6";
+      ctx.fillRect(140, FLOOR - 190, 12, 190);
+      ctx.fillRect(1048, FLOOR - 190, 12, 190);
+      ["#d23b3b", "#f1f1f1", "#2f6fde"].forEach((c, i) => {
+        ctx.strokeStyle = c;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        const y = FLOOR - 60 - i * 55;
+        ctx.moveTo(146, y);
+        ctx.quadraticCurveTo(600, y + 6, 1054, y);
+        ctx.stroke();
+      });
+      // floor shadows, placed from game state
+      for (const f of [m.a, m.b]) {
+        ctx.fillStyle = "rgba(0,0,0,0.35)";
+        ctx.beginPath();
+        ctx.ellipse(f.x - m.ox, FLOOR + 2, 38, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  // ---- 2D: overlay (drawn AFTER Rive) -------------------------------------
+  function drawOverlay() {
+    ctx.setTransform(dpr * cam.s, 0, 0, dpr * cam.s, dpr * cam.x, dpr * cam.y);
+    ctx.globalCompositeOperation = "lighter";
+    for (const m of matches) {
+      if (!m.flash) continue;
+      const { x, y, k } = m.flash; // k: 0 -> 1 over the flash
+      const r = 18 + 70 * k;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, `rgba(255,255,255,${1 - k})`);
+      g.addColorStop(0.35, `rgba(255,220,90,${0.85 * (1 - k)})`);
+      g.addColorStop(1, "rgba(255,120,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function drawHud() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const lines = [
+      `FPS ${stats.fps.toFixed(1)}`,
+      `JS frame ${stats.frameMs.toFixed(2)} ms (pose + Rive + 2D)`,
+      `rigs ${matches.length * 2}   bones/rig ${JOINTS.length}`,
+      `Rive vs game FK: ${stats.fkErr.toFixed(3)} px`,
+      `canvas ${canvas.width}x${canvas.height} @${dpr}x   boot ${stats.bootMs.toFixed(0)} ms`,
+    ];
+    ctx.fillStyle = "rgba(0,0,0,0.55)";
+    ctx.fillRect(10, 10, 300, 18 * lines.length + 34);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 22px ui-monospace, Menlo, monospace";
+    ctx.fillText(lines[0], 20, 38);
+    ctx.font = "12px ui-monospace, Menlo, monospace";
+    lines.slice(1).forEach((l, i) => ctx.fillText(l, 20, 58 + i * 18));
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.fillText("background: canvas 2D  |  fighters: Rive bones set from JS  |  flash + HUD: canvas 2D", 12, canvas.clientHeight - 12);
+  }
+
+  // ---- Frame loop ---------------------------------------------------------
+  const stats = { fps: 0, frameMs: 0, fkErr: 0, frames: 0, bootMs: 0 };
+  let fpsFrames = 0, fpsStart = performance.now(), msSum = 0, last = performance.now();
+  const start = last;
+
+  function frame(now) {
+    const t0 = performance.now();
+    if (!stats.bootMs) stats.bootMs = t0; // page start -> first frame
+    const dt = Math.min(0.1, (now - last) / 1000);
+    last = now;
+    const t = (now - start) / 1000;
+
+    // 1) Game update: compute every joint angle + root position.
+    let fkErr = 0;
+    for (const m of matches) {
+      const phase = ((t + m.seed) / KICK_PERIOD) % 1;
+      const kick = kickPose(phase);
+      const poseA = addSines(kick.pose, t, AMP_A, m.seed);
+      const kickIn = clamp01((phase - 0.3) / 0.25) * (phase < 0.8 ? 1 : 1 - (phase - 0.8) / 0.2);
+      m.a.x = m.ox + 505 + 6 * Math.sin(t * 2.2 + m.seed) + 14 * kickIn;
+      m.a.y = m.oy + FLOOR - lowestBelowPelvis(poseA);
+
+      if (kick.impact >= 0 && kick.impact < 0.05) m.hit = 1;
+      m.hit = Math.max(0, m.hit - dt * 3);
+      const poseB = addSines(GUARD, t, AMP_B, m.seed + 2);
+      poseB.torso -= 18 * m.hit;
+      poseB.neck -= 22 * m.hit;
+      poseB.head -= 26 * m.hit;
+      m.b.x = m.ox + 700 + 8 * Math.sin(t * 1.7 + m.seed) + 10 * m.hit;
+      m.b.y = m.oy + FLOOR - lowestBelowPelvis(poseB) - 5 * Math.abs(Math.sin(t * 4 + m.seed));
+
+      applyPose(m.a, poseA, m.a.x, m.a.y, 1);
+      applyPose(m.b, poseB, m.b.x, m.b.y, -1);
+      m.a.artboard.advance(dt);
+      m.b.artboard.advance(dt);
+
+      // Read the kicking foot back from Rive; also used to place the flash.
+      const w = m.a.bones.fFoot.worldTransform();
+      const tip = { x: w.tx + w.xx * LEN.foot, y: w.ty + w.xy * LEN.foot };
+      w.delete();
+      const mine = footTip(poseA, "f");
+      fkErr = Math.max(fkErr, Math.hypot(tip.x - (m.a.x + mine.x), tip.y - (m.a.y + mine.y)));
+      m.flash = kick.impact >= 0 ? { x: tip.x, y: tip.y, k: kick.impact } : null;
+    }
+
+    // 2) Background, plain canvas 2D.
+    drawBackground(t);
+
+    // 3) Rive. The canvas renderer queues its draw calls; resolveAnimationFrame()
+    //    runs the queue on this same 2D context, on top of what's there now.
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    renderer.beginFrame(false); // false = don't clear the background we just drew
+    renderer.save();
+    renderer.transform(dpr * cam.s, 0, 0, dpr * cam.s, dpr * cam.x, dpr * cam.y);
+    for (const m of matches) {
+      m.b.artboard.draw(renderer);
+      m.a.artboard.draw(renderer);
+    }
+    renderer.restore();
+    rive.resolveAnimationFrame();
+
+    // 4) Overlay, plain canvas 2D again.
+    drawOverlay();
+
+    const t1 = performance.now();
+    msSum += t1 - t0;
+    fpsFrames++;
+    stats.frames++;
+    stats.fkErr = fkErr;
+    if (t1 - fpsStart >= 500) {
+      stats.fps = (fpsFrames * 1000) / (t1 - fpsStart);
+      stats.frameMs = msSum / fpsFrames;
+      fpsFrames = 0;
+      msSum = 0;
+      fpsStart = t1;
+    }
+    drawHud();
+    requestAnimationFrame(frame);
+  }
+
+  // Handle for tools/verify.cjs (and for poking at from the console).
+  window.__rigTest = { rive, file, matches, stats, JOINTS, view: () => ({ dpr, cam }) };
+  requestAnimationFrame(frame);
+}
+
+boot().catch(fail);
+</script>
+</body>
+</html>
