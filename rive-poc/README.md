@@ -120,7 +120,21 @@ function frame(dt) {
 
 ## Measured performance
 
-These numbers come from headless Chromium in a Linux cloud container, with
+**iPhone 17 Pro** (the owner's phone, page opened in the Claude app, landscape, 3× resolution):
+
+| Fighters | FPS | JS time per frame |
+| --- | --- | --- |
+| 2 | 30.0 (see note) | 1.53 ms |
+| 20 | 59.8 | 7.00 ms |
+
+With 2 fighters the page used 1.53 ms of the 16.7 ms a 60 FPS frame
+allows, so the rig didn't cause the 30 FPS. The likely causes are WebKit
+throttling an embedded page to 30 FPS until it is tapped (the 20-fighter
+reading came after tapping a button), or Low Power Mode. Neither applies to
+the game's own web view once the page has been touched.
+
+
+The numbers below come from headless Chromium in a Linux cloud container, with
 software rendering and no GPU, at 1280×720. **They are not Mac numbers.** Open
 `rig-test.html` on the Mac and read the counter in the top-left corner.
 
