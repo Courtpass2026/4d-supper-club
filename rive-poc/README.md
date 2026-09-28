@@ -227,5 +227,6 @@ checks layout only; it is not WebKit and not the phone's GPU.
 10. **iPhone app:** if the web view sets a Content-Security-Policy, the page
     needs `'wasm-unsafe-eval'` (to compile the wasm) and must allow the
     inline scripts.
-11. **Only tested in Chromium.** Safari/WebKit (Mac Safari and the iPhone web
-    view) was not tested here.
+11. **Browsers tested.** The automated checks run in Chromium. The published
+    copy also ran on a real iPhone 17 Pro in the Claude app (WebKit). Mac
+    Safari hasn't been tried yet.
